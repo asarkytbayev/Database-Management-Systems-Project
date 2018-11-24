@@ -1,5 +1,0 @@
-soap            substance used to wash body              DF-128772-GT        220     2.09        
-toothbrush      a small brush used for cleaning teeth    VB-345243-5H        344     2.11        
-candy           everyday snack                           SX-234121-NI        343     1.22        
-hotpot          electrical equipment used to boil water  LO-812235-U9        231     123.90     
-chili jam       jam made from chili                      RX-923806-K9        198     4.76
