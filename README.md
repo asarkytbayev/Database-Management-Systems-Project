@@ -1,5 +1,11 @@
 # OrderManager: A Database for Managing Products and Orders
 
+## Table of Contents
+* [Description](#description)
+* [Team](#team)
+* [Schema](#schema)
+
+
 ## Description
 OrderManager is an e-commerce program that enables a business to manage information about products that can be sold to customers, to track current inventories of products, and to process orders for products from customers. 
 
