@@ -97,33 +97,33 @@ public class OrderManager {
             stmt.executeUpdate(createFunction_isSKU);
             System.out.println("Created function isSKU()");
             
-//            // create parseNumber function
-//            String createFunction_parseNumber =
-//            		"CREATE FUNCTION parseNumber(" + 
-//            		"	s VARCHAR(64)" +
-//            		") RETURNS INT" +
-//            		" PARAMETER STYLE JAVA" +
-//            		" LANGUAGE JAVA" +
-//            		" DETERMINISTIC" +
-//            		" NO SQL" +
-//            		" EXTERNAL NAME " +
-//            		"	'Helper.parseNumber'"; 
-//            stmt.executeUpdate(createFunction_parseNumber);
-//            System.out.println("Created function parseNumber()");
-//            
-//            // create parsePrice function
-//            String createFunction_parsePrice =
-//            		"CREATE FUNCTION parsePrice(" + 
-//            		"	s VARCHAR(64)" +
-//            		") RETURNS DECIMAL(18,2)" +
-//            		" PARAMETER STYLE JAVA" +
-//            		" LANGUAGE JAVA" +
-//            		" DETERMINISTIC" +
-//            		" NO SQL" +
-//            		" EXTERNAL NAME " +
-//            		"	'Helper.parsePrice'"; 
-//            stmt.executeUpdate(createFunction_parsePrice);
-//            System.out.println("Created function parsePrice()");
+            // create parseNumber function
+            String createFunction_parseNumber =
+            		"CREATE FUNCTION parseNumber(" + 
+            		"	s VARCHAR(64)" +
+            		") RETURNS INT" +
+            		" PARAMETER STYLE JAVA" +
+            		" LANGUAGE JAVA" +
+            		" DETERMINISTIC" +
+            		" NO SQL" +
+            		" EXTERNAL NAME " +
+            		"	'Helper.parseNumber'"; 
+            stmt.executeUpdate(createFunction_parseNumber);
+            System.out.println("Created function parseNumber()");
+            
+            // create parsePrice function
+            String createFunction_parsePrice =
+            		"CREATE FUNCTION parsePrice(" + 
+            		"	s VARCHAR(64)" +
+            		") RETURNS DECIMAL(18,2)" +
+            		" PARAMETER STYLE JAVA" +
+            		" LANGUAGE JAVA" +
+            		" DETERMINISTIC" +
+            		" NO SQL" +
+            		" EXTERNAL NAME " +
+            		"	'Helper.parsePrice'"; 
+            stmt.executeUpdate(createFunction_parsePrice);
+            System.out.println("Created function parsePrice()");
             
             
             // create the Product table with SKU validation
