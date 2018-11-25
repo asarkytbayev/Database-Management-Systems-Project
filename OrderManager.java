@@ -12,7 +12,7 @@ import java.util.Properties;
  *
  * 
  *
- * @author lily hu
+ * @author Yitong Hu
  */
 public class OrderManager {
 	
@@ -124,6 +124,20 @@ public class OrderManager {
             		"	'Helper.parsePrice'"; 
             stmt.executeUpdate(createFunction_parsePrice);
             System.out.println("Created function parsePrice()");
+            
+            // create parseDate function
+            String createFunction_parseDate =
+            		"CREATE FUNCTION parseDate(" + 
+            		"	s VARCHAR(64)" +
+            		") RETURNS DATE" +
+            		" PARAMETER STYLE JAVA" +
+            		" LANGUAGE JAVA" +
+            		" DETERMINISTIC" +
+            		" NO SQL" +
+            		" EXTERNAL NAME " +
+            		"	'Helper.parseDate'"; 
+            stmt.executeUpdate(createFunction_parseDate);
+            System.out.println("Created function parseDate()");
             
             
             // create the Product table with SKU validation
@@ -237,7 +251,7 @@ public class OrderManager {
   	            	+ " END IF;"
   	            	+ " END;";
   			stmt.executeUpdate(createTrigger_OrderRecordOverflow);
-            System.out.println("Created trigger for inserting OrderRecord"); // 
+            System.out.println("Created trigger for inserting OrderRecord"); // check
               
             
 		} catch (SQLException e) {
