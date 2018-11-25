@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 import java.sql.Savepoint;
+import java.sql.Date;
 
 import org.apache.derby.shared.common.reference.SQLState; // !  check
 
@@ -67,7 +68,7 @@ public class TestOrderManager {
         		PreparedStatement insertRow_Customer = conn.prepareStatement(
     					"INSERT INTO Customer VALUES(?, ?, ?, ?, ?, ?)");
         		PreparedStatement insertRow_TheOrder = conn.prepareStatement(
-    					"INSERT INTO TheOrder VALUES(?, ?, ?)");
+    					"INSERT INTO TheOrder VALUES(?, parseDate(?), parseDate(?))");
         		PreparedStatement insertRow_OrderRecord = conn.prepareStatement(
     					"INSERT INTO OrderRecord VALUES(?, ?, parseNumber(?), parsePrice(?))");
         	) {
@@ -183,6 +184,32 @@ public class TestOrderManager {
 //              System.out.printf("For price '123.90', error calling parsePrice: %s\n", ex.getMessage());
 //            }
             
+            // test parseDate function
+		    // parse invalid date string
+            try {
+              rs = stmt.executeQuery("VALUES parseDate('11-23-2018')"); 
+              rs.next(); // this step throws exception
+              Date date = rs.getDate(1); // !
+			  System.out.printf("value of date string '11-23-2018' is %d\n", date);
+          	  rs.close();
+            } catch (SQLException ex) {
+              System.out.printf("For date '11-23-2018', error calling parseDate: %s\n", ex.getMessage());
+            }
+            // parse valid date string: representative value from the data file
+            PreparedStatement invoke_parseDate = conn.prepareStatement("values parseDate(?)");
+            try {
+            	  invoke_parseDate.setString(1, "2018-11-23");
+      		  rs = invoke_parseDate.executeQuery();
+      		  if (rs.next()) {
+      			Date date = rs.getDate(1);
+      			System.out.printf("value of date string '2018-11-23' is: %s\n", date.toString());  // toString() formats a date in the date escape format yyyy-mm-dd
+      		  }
+        		  rs.close();
+        		  invoke_parseDate.close();
+            } catch (SQLException ex) {
+              System.out.printf("For date '2018-11-23', error calling parseDate: %s\n", ex.getMessage());
+            }
+            
             
             String line;
             
@@ -195,8 +222,8 @@ public class TestOrderManager {
 				String productName = data[0];
 				String productDescription = data[1];
 		        String sku = data[2];
-		        String inventoryString = data[3];
-		        String priceString = data[4];
+		        String inventoryStr = data[3];
+		        String priceStr = data[4];
 
 				// add Product if does not exist
 				try {
@@ -212,8 +239,10 @@ public class TestOrderManager {
 
 				// add InventoryRecord if does not exist
 				try {
-					insertRow_InventoryRecord.setString(1, inventoryString);
-					insertRow_InventoryRecord.setString(2, priceString);
+					insertRow_InventoryRecord.setString(1, inventoryStr);
+//					insertRow_InventoryRecord.setInt(1, new Integer(inventoryStr)); // check, then no need for stored function!
+					insertRow_InventoryRecord.setString(2, priceStr);
+//					insertRow_InventoryRecord.setBigDecimal(2, new BigDecimal(priceStr)); // check; BigDecimal -> decimal?
 					insertRow_InventoryRecord.setString(3, sku);
 					insertRow_InventoryRecord.execute();
 				} catch (SQLException ex) {
@@ -235,16 +264,16 @@ public class TestOrderManager {
 				// get fields from input data
 				String productName = data[0];
 				String sku = data[1];
-				String price = data[2];
+				String priceStr = data[2];
 				String customerName = data[3];
 				String address = data[4];
 				String city = data[5];
 				String state = data[6];
 				String country = data[7];
 				String zipCode = data[8];
-				String orderDate = data[9];
-				String shipmentDate = data[10];
-				String numberBought = data[11];
+				String orderDateStr = data[9];
+				String shipmentDateStr = data[10];
+				String numberBoughtStr = data[11];
 				
 				// add Customer if does not exist
 				try {
@@ -266,8 +295,10 @@ public class TestOrderManager {
 	    				if (rs.next()) {
 	    					int customerId = rs.getInt(1);
 	    					insertRow_TheOrder.setInt(1, customerId); // check
-	    					insertRow_TheOrder.setString(2, orderDate); 
-	    					insertRow_TheOrder.setString(3, shipmentDate); 
+	    					insertRow_TheOrder.setString(2, orderDateStr); 
+//	    					insertRow_TheOrder.setDate(2, java.sql.Date.valueOf(orderDateStr));  // JDBC date escape format "yyyy-[m]m-[d]d"; check; or use a stored function?  
+	    					insertRow_TheOrder.setString(3, shipmentDateStr); 
+//	    					insertRow_TheOrder.setDate(3, java.sql.Date.valueOf(shipmentDateStr)); // check as above
 	    					insertRow_TheOrder.execute();
 	    				}
 	    				rs.close();
@@ -283,8 +314,8 @@ public class TestOrderManager {
 	    					int orderId = rs.getInt(1);
 	    					insertRow_OrderRecord.setInt(1, orderId); // check
 	    					insertRow_OrderRecord.setString(2, sku);
-	    					insertRow_OrderRecord.setString(3, numberBought);
-	    					insertRow_OrderRecord.setString(4, price);
+	    					insertRow_OrderRecord.setString(3, numberBoughtStr);
+	    					insertRow_OrderRecord.setString(4, priceStr);
 	    					insertRow_OrderRecord.execute();
 	    				}
 	    				rs.close();
