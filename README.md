@@ -33,28 +33,51 @@ Yitong Hu   hu.yit@husky.neu.edu
 
 - Product table
  
-| name        | description           | SKU  |
-|:-------------:|:-------------:|:-----:|
+| Column Name  | Data Type   | 
+|:-------------:|:-------------:|
+| name       | VARCHAR(32) | 
+| description      | VARCHAR(64)      | 
+| SKU | CHAR(12)      |  
+
 
 - InventoryRecord table
 
-| number        | price           | productSKU  |
-|:-------------:|:-------------:|:-----:|
+| Column Name  | Data Type   | 
+|:-------------:|:-------------:|
+| number       | INT | 
+| price      | DECIMAL(18,2)    | 
+| productSKU | CHAR(12)      | 
 
 - Customer table
 
-| id        | name           | address  |city | state | country| zipCode | 
-|:-------------:|:-------------:|:-----:|:-----:|:-----:|:-----:|:-----:|
+| Column Name  | Data Type   | 
+|:-------------:|:-------------:|
+| id       | INT | 
+| name      | VARCHAR(20)    | 
+| address | VARCHAR(64)     | 
+| city       | VARCHAR(16) | 
+| state      | VARCHAR(16)   | 
+| country | VARCHAR(16)      |
+| zipCode | INT    | 
 
 - TheOrder table
 
-| id        | customerId           | orderDate  |shipmentDate |
-|:-------------:|:-------------:|:-----:|:-----:|
+| Column Name  | Data Type   | 
+|:-------------:|:-------------:|
+| id       | INT | 
+| customerId      | INT   | 
+| orderDate | DATE      | 
+| shipmentDate | DATE     | 
 
 - OrderRecord table
 
 | orderId        | productSKU           | number  |inventoryPrice |
-|:-------------:|:-------------:|:-----:|:-----:|
+| Column Name  | Data Type   | 
+|:-------------:|:-------------:|
+| orderId       | INT | 
+| productSKU      | CHAR(12)   | 
+| number | INT      | 
+| inventoryPrice | DECIMAL(18,2)     | 
 
 **UML image**
 
