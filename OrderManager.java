@@ -35,7 +35,7 @@ public class OrderManager {
 
 	    // functions created by this program
 	    String dbFunctions[] = {
-	    		"isSKU", "parseNumber", "parsePrice" // for check purpose
+	    		"isSKU" // for check purpose
 	    };
 
 		Properties props = new Properties(); // connection properties
@@ -97,33 +97,33 @@ public class OrderManager {
             stmt.executeUpdate(createFunction_isSKU);
             System.out.println("Created function isSKU()");
             
-            // create parseNumber function
-            String createFunction_parseNumber =
-            		"CREATE FUNCTION parseNumber(" + 
-            		"	s VARCHAR(64)" +
-            		") RETURNS INT" +
-            		" PARAMETER STYLE JAVA" +
-            		" LANGUAGE JAVA" +
-            		" DETERMINISTIC" +
-            		" NO SQL" +
-            		" EXTERNAL NAME " +
-            		"	'Helper.parseNumber'"; 
-            stmt.executeUpdate(createFunction_parseNumber);
-            System.out.println("Created function parseNumber()");
-            
-            // create parsePrice function
-            String createFunction_parsePrice =
-            		"CREATE FUNCTION parsePrice(" + 
-            		"	s VARCHAR(64)" +
-            		") RETURNS DECIMAL(18,2)" +
-            		" PARAMETER STYLE JAVA" +
-            		" LANGUAGE JAVA" +
-            		" DETERMINISTIC" +
-            		" NO SQL" +
-            		" EXTERNAL NAME " +
-            		"	'Helper.parsePrice'"; 
-            stmt.executeUpdate(createFunction_parsePrice);
-            System.out.println("Created function parsePrice()");
+//            // create parseNumber function
+//            String createFunction_parseNumber =
+//            		"CREATE FUNCTION parseNumber(" + 
+//            		"	s VARCHAR(64)" +
+//            		") RETURNS INT" +
+//            		" PARAMETER STYLE JAVA" +
+//            		" LANGUAGE JAVA" +
+//            		" DETERMINISTIC" +
+//            		" NO SQL" +
+//            		" EXTERNAL NAME " +
+//            		"	'Helper.parseNumber'"; 
+//            stmt.executeUpdate(createFunction_parseNumber);
+//            System.out.println("Created function parseNumber()");
+//            
+//            // create parsePrice function
+//            String createFunction_parsePrice =
+//            		"CREATE FUNCTION parsePrice(" + 
+//            		"	s VARCHAR(64)" +
+//            		") RETURNS DECIMAL(18,2)" +
+//            		" PARAMETER STYLE JAVA" +
+//            		" LANGUAGE JAVA" +
+//            		" DETERMINISTIC" +
+//            		" NO SQL" +
+//            		" EXTERNAL NAME " +
+//            		"	'Helper.parsePrice'"; 
+//            stmt.executeUpdate(createFunction_parsePrice);
+//            System.out.println("Created function parsePrice()");
             
             
             // create the Product table with SKU validation
@@ -194,6 +194,7 @@ public class OrderManager {
             stmt.executeUpdate(createTable_OrderRecord);
             System.out.println("Created relation table OrderRecord"); 
             
+            
             // create trigger for inserting an order record that also deletes
             // number of units available for the InventoryRecord
 			String createTrigger_OrderRecordInsert =
@@ -205,6 +206,39 @@ public class OrderManager {
 	            	+ "   WHERE InventoryRecord.productSKU = N_ROW.productSKU";
 			stmt.executeUpdate(createTrigger_OrderRecordInsert);
             System.out.println("Created trigger for inserting OrderRecord");
+            
+            // create trigger for deleting an order record that also updates (adds back) 
+            // number of units available for the InventoryRecord. The deletion of 
+            // an order record is caused by deletion on TheOrder (suppose the 
+            // customer cancels one of his orders // 反向trigger? check 
+			String createTrigger_OrderRecordDelete =
+         		  "CREATE TRIGGER OrderRecordDelete"
+         		+ " AFTER DELETE ON OrderRecord"
+         		+ " REFERENCING OLD AS DeletedOrderRecord"
+	    			+ " FOR EACH ROW MODE DB2SQL"
+	            	+ "   UPDATE InventoryRecord SET InventoryRecord.number = InventoryRecord.number + DeletedOrderRecord.number"
+	            	+ "   WHERE InventoryRecord.productSKU = DeletedOrderRecord.productSKU";
+			stmt.executeUpdate(createTrigger_OrderRecordDelete);
+            System.out.println("Created trigger for deleting OrderRecord");
+            
+            // create trigger for inserting an order record whose number of item
+            // is more than number of units available for the InventoryRecord, 
+            // thus resulting in the insertion failure, and the order itself 
+            // also gets canceled automatically. // check
+            String createTrigger_OrderRecordOverflow =
+           		  "CREATE TRIGGER OrderRecordOverflow"
+           		+ " BEFORE INSERT ON OrderRecord"
+           		+ " REFERENCING NEW AS N_ROW"
+  	    			+ " FOR EACH ROW MODE DB2SQL"
+  	    			+ " BEGIN"
+  	    			+ " IF N_ROW.number > InventoryRecord.number THEN" // check: MySQL syntax
+  	    			+ " DELETE FROM TheOrder WHERE id = N_ROW.orderId"
+  	            	+ "   " // check: how to cancel the insertion itself?
+  	            	+ " END IF;"
+  	            	+ " END;";
+  			stmt.executeUpdate(createTrigger_OrderRecordOverflow);
+            System.out.println("Created trigger for inserting OrderRecord"); // 
+              
             
 		} catch (SQLException e) {
 			e.printStackTrace();
