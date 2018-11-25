@@ -21,7 +21,7 @@ import org.apache.derby.shared.common.reference.SQLState; // !  check
  * productName, SKU, price, customerName, address, city, state, country, zipCode, 
  * orderDate, shipmentDate, number bought. 
  *
- * @author lily hu
+ * @author Yitong Hu
  */
 
 public class TestOrderManager {
@@ -90,34 +90,33 @@ public class TestOrderManager {
             
             // testing stored functions
             System.out.println("\nTesting stored functions");
-            ResultSet rs1;
             
             // test isSKU function
             // invalid SKU
 		    try {
-		      rs1 = stmt.executeQuery("VALUES isSKU('AB-1456-0N')");
-		      rs1.next(); 
-		  	  boolean is_sku = rs1.getBoolean(1);
+		      rs = stmt.executeQuery("VALUES isSKU('AB-1456-0N')");
+		      rs.next(); 
+		  	  boolean is_sku = rs.getBoolean(1);
 			  if (is_sku) {
 				System.out.printf("SKU 'AB-1456-0N' is valid\n");
 			  } else {
 				System.out.printf("SKU 'AB-1456-0N' is not valid\n");
 			  }
-			  rs1.close();
+			  rs.close();
 		    } catch (SQLException ex) {
 		      System.out.printf("For SKU 'AB-1456-0N', error calling isSKU: %s\n", ex.getMessage());
 		    }
 		    // valid SKU
 		    try {
-		        rs1 = stmt.executeQuery("VALUES isSKU('AB-123456-0N')");
-			    rs1.next(); 
-			  	boolean is_sku = rs1.getBoolean(1);
+		        rs = stmt.executeQuery("VALUES isSKU('AB-123456-0N')");
+			    rs.next(); 
+			  	boolean is_sku = rs.getBoolean(1);
 				if (is_sku) {
 					System.out.printf("SKU 'AB-123456-0N' is valid\n");
 				} else {
 					System.out.printf("SKU 'AB-123456-0N' is not valid\n");
 				}
-				rs1.close();
+				rs.close();
 		    } catch (SQLException ex) {
 		      System.out.printf("For SKU 'AB-123456-0N', error calling isSKU: %s\n", ex.getMessage());
 		    }
@@ -125,11 +124,11 @@ public class TestOrderManager {
 		    // test parseNumber function
 		    // parse invalid number string
             try {
-              rs1 = stmt.executeQuery("VALUES parseNumber('d78')"); 
-              rs1.next(); // this step throws exception
-              int number = rs1.getInt(1);
+              rs = stmt.executeQuery("VALUES parseNumber('d78')"); 
+              rs.next(); // this step throws exception
+              int number = rs.getInt(1);
 			  System.out.printf("value of number string 'd78' is %d\n", number);
-          	  rs1.close();
+          	  rs.close();
             } catch (SQLException ex) {
               System.out.printf("For number 'd78', error calling parseNumber: %s\n", ex.getMessage());
             }
@@ -137,12 +136,12 @@ public class TestOrderManager {
             PreparedStatement invoke_parseNumber = conn.prepareStatement("VALUES parseNumber(?)");
             try {
             	  invoke_parseNumber.setString(1, "231");
-      		  rs1 = invoke_parseNumber.executeQuery();
-      		  if (rs1.next()) {
-      			int number = rs1.getInt(1);
+      		  rs = invoke_parseNumber.executeQuery();
+      		  if (rs.next()) {
+      			int number = rs.getInt(1);
       			System.out.printf("value of number string '231' is %d\n", number); 
       		  }
-      		  rs1.close();
+      		  rs.close();
               invoke_parseNumber.close();
             } catch (SQLException ex) {
               System.out.printf("For number '231', error calling parseNumber: %s\n", ex.getMessage());
@@ -151,11 +150,11 @@ public class TestOrderManager {
             // test parsePrice function
 		    // parse invalid price string
             try {
-              rs1 = stmt.executeQuery("VALUES parsePrice('34.21bh')"); 
-              rs1.next(); // this step throws exception
-              double price = rs1.getDouble(1);
+              rs = stmt.executeQuery("VALUES parsePrice('34.21bh')"); 
+              rs.next(); // this step throws exception
+              double price = rs.getDouble(1);
 			  System.out.printf("value of price string '34.21bh' is %d\n", price);
-          	  rs1.close();
+          	  rs.close();
             } catch (SQLException ex) {
               System.out.printf("For price '34.21bh', error calling parsePrice: %s\n", ex.getMessage());
             }
@@ -163,26 +162,26 @@ public class TestOrderManager {
             PreparedStatement invoke_parsePrice = conn.prepareStatement("values parsePrice(?)");
             try {
             	  invoke_parsePrice.setString(1, "123.90");
-      		  rs1 = invoke_parsePrice.executeQuery();
-      		  if (rs1.next()) {
-      			double price = rs1.getDouble(1); // ! 
+      		  rs = invoke_parsePrice.executeQuery();
+      		  if (rs.next()) {
+      			double price = rs.getDouble(1); // ! 
       			System.out.printf("value of price string '123.90' is: %.2f\n", price);  // !
       		  }
-        		  rs1.close();
+        		  rs.close();
         		  invoke_parsePrice.close();
             } catch (SQLException ex) {
               System.out.printf("For price '123.90', error calling parsePrice: %s\n", ex.getMessage());
             }
             // alternative
-            try {
-      		  rs1 = stmt.executeQuery("VALUES parsePrice('123.90')");
-      		  rs1.next();
-      		  double price = rs1.getDouble(1);  
-      		  System.out.printf("value of price string '123.90' is: %.2f\n", price);  
-        		  rs1.close();
-            } catch (SQLException ex) {
-              System.out.printf("For price '123.90', error calling parsePrice: %s\n", ex.getMessage());
-            }
+//            try {
+//      		  rs = stmt.executeQuery("VALUES parsePrice('123.90')");
+//      		  rs.next();
+//      		  double price = rs.getDouble(1);  
+//      		  System.out.printf("value of price string '123.90' is: %.2f\n", price);  
+//        		  rs.close();
+//            } catch (SQLException ex) {
+//              System.out.printf("For price '123.90', error calling parsePrice: %s\n", ex.getMessage());
+//            }
             
             
             String line;
@@ -263,15 +262,15 @@ public class TestOrderManager {
 				
 				// add TheOrder if does not exist
 				try {
-					rs1 = stmt.executeQuery("SELECT id FROM Customer");
-	    				if (rs1.next()) {
-	    					int customerId = rs1.getInt(1);
+					rs = stmt.executeQuery("SELECT id FROM Customer");
+	    				if (rs.next()) {
+	    					int customerId = rs.getInt(1);
 	    					insertRow_TheOrder.setInt(1, customerId); // check
 	    					insertRow_TheOrder.setString(2, orderDate); 
 	    					insertRow_TheOrder.setString(3, shipmentDate); 
 	    					insertRow_TheOrder.execute();
 	    				}
-	    				rs1.close();
+	    				rs.close();
 				} catch (SQLException ex) { 
 					// already exists
 					// System.err.printf("Unable to insert TheOrder\n");
@@ -279,16 +278,16 @@ public class TestOrderManager {
 				
 				// add OrderRecord if does not exist
 				try {
-					rs1 = stmt.executeQuery("SELECT id FROM TheOrder");
-	    				if (rs1.next()) {
-	    					int orderId = rs1.getInt(1);
+					rs = stmt.executeQuery("SELECT id FROM TheOrder");
+	    				if (rs.next()) {
+	    					int orderId = rs.getInt(1);
 	    					insertRow_OrderRecord.setInt(1, orderId); // check
 	    					insertRow_OrderRecord.setString(2, sku);
 	    					insertRow_OrderRecord.setString(3, numberBought);
 	    					insertRow_OrderRecord.setString(4, price);
 	    					insertRow_OrderRecord.execute();
 	    				}
-	    				rs1.close();
+	    				rs.close();
 				} catch (SQLException ex) { 
 					// already exists
 					// System.err.printf("Unable to insert OrderRecord\n"); 
@@ -326,14 +325,18 @@ public class TestOrderManager {
 			
 			Savepoint sp1 = conn.setSavepoint("Inserts");
     
-			// scenario 2: delete order ??: if customer cancels the order proactively // check, what if he deletes only one of his orders?
-			System.out.println("\nAza deletes his order ??"); // check  
-			stmt.executeUpdate("DELETE FROM TheOrder WHERE id = ?"); // check
+			// scenario 2: delete order: if customer cancels the order proactively // check
+			rs = stmt.executeQuery("SELECT id FROM TheOrder");
+			rs.next();
+			int orderId = rs.getInt(1);
+			
+			System.out.printf("\nAza deletes one of his orders, order id is: %d\n", orderId); // check  
+			stmt.executeUpdate("DELETE FROM TheOrder WHERE id = " + orderId); // check
 			Util.printInventoryRecord(conn);
 			Util.printTheOrder(conn);
 			Util.printOrderRecord(conn);
 			
-			System.out.println("Rolling back delete Aza's order ???."); // check
+			System.out.printf("Rolling back delete Aza's order, order id is: %d\n", orderId); // check
 			conn.rollback(sp1);
 			Util.printInventoryRecord(conn);
 			Util.printTheOrder(conn);
