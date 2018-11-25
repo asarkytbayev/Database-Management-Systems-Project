@@ -71,7 +71,6 @@ Yitong Hu   hu.yit@husky.neu.edu
 
 - OrderRecord table
 
-| orderId        | productSKU           | number  |inventoryPrice |
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
 | orderId       | INT | 
