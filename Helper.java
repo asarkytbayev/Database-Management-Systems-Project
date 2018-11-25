@@ -1,7 +1,7 @@
 /**
  * This class contains stored function for validating sku type to string.
  * 
- * @author lily hu
+ * @author Yitong Hu
  *
  */
 
@@ -30,13 +30,24 @@ public class Helper {
 	}
 	
 	/**
-	 * This function parses a price string into a float. 
+	 * This function parses a price string into a double. 
 	 * 
 	 * @param s the price string
-	 * @return the float value represented by the string argument
-	 * @throws NumberFormatException if the string does not contain a parsable float
+	 * @return the double value represented by the string argument
+	 * @throws NumberFormatException if the string does not contain a parsable double
 	 */
 	static public double parsePrice(String s) throws NumberFormatException { // need to parse
 		return Math.round(Double.parseDouble(s) * 100) / 100; // round up the double to 2 decimal places
+	}
+	
+	/**
+	 * This function parses a date string into a Date. 
+	 * 
+	 * @param s the date string
+	 * @return the Date value represented by the string argument
+	 * @throws IllegalArgumentException if the date string given is not in the JDBC date escape format (yyyy-[m]m-[d]d) 
+	 */
+	static public java.sql.Date parseDate(String s) throws IllegalArgumentException { // need to parse 
+		return java.sql.Date.valueOf(s);
 	}
 }
