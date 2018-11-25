@@ -9,9 +9,9 @@ hotpot           electrical equipment used to boil water          LO-812235-U9
 chili jam                jam made from chili                      RX-923806-K9
 
 
-InventoryRecord - 2    // (3 & 4, one to many)
+InventoryRecord - 2    // (one to many)
 number of units available            price/unit                                productSKU(primary key, foreign key, ON DELETE CASCADE)
-120 /* no need to parse to int */      4.33 /* no need to parse to decimal */   AB-123456-0N /* toothpaste */
+120 /* need to parse to int */         4.33 /* need to parse to decimal */      AB-123456-0N /* toothpaste */
 220                                    2.09                                     DF-128772-GT /* soap */
 344                                    2.11                                     VB-345243-5H /* toothbrush */ 
 343                                    1.22                                     SX-234121-NI /* candy */ 
@@ -26,11 +26,11 @@ id(primary key)       name               address                       city     
 
 ____relation table____
 TheOrder - 4           // one customer can have many orders (one to many)  
-id(primary key)      customerID(foreign key, ON DELETE CASCADE)     orderDate       shipmentDate
-1                     1 /* Aza */                                   2018-11-23        2018-11-26 
-2                     2 /* Yitong */                                2018-11-26        2018-12-02
-3                     1 /* Aza */                                   2018-11-27        2018-12-04
-4                     3 /* Anna */                                  2018-12-12        2018-12-14
+id(primary key)      customerID(foreign key, ON DELETE CASCADE)      orderDate                                  shipmentDate
+1                     1 /* Aza */                                   2018-11-23 /* need to parse to Date */       2018-11-26 /* need to parse to Date */
+2                     2 /* Yitong */                                2018-11-26                                   2018-12-02
+3                     1 /* Aza */                                   2018-11-27                                   2018-12-04
+4                     3 /* Anna */                                  2018-12-12                                   2018-12-14
 
 OrderRecord - 5            // if order is canceled by customer 
 orderId(primary key, foreign key, ON DELETE CASCADE)     productSKU(primary key, foreign key, ON DELETE CASCADE)           number of units                      inventoryPrice(foreign key, ON DELETE CASCADE)    
@@ -57,6 +57,3 @@ orderId(primary key, foreign key, ON DELETE CASCADE)     productSKU(primary key,
 4  3     candy           SX-234121-NI        1.22      Anna    8340 Winfred Avenue                 Munich        Bavaria         Germany  80336       2018-12-12      2018-12-14      50
 4  3     hotpot          LO-812235-U9        123.90    Anna    8340 Winfred Avenue                 Munich        Bavaria         Germany  80336       2018-12-12      2018-12-14      1
  
-
-
-
