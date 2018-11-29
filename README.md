@@ -83,15 +83,25 @@ Yitong Hu   hu.yit@husky.neu.edu
 **UML image**
 
 ## Deliverables
-**Helper.java**
-
 **OrderManager.java**
+
+This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
 **TestOrderManager.java**
 
+This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, zipCode, orderDate, shipmentDate, number bought. 
+
+**Helper.java**
+
+This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
+
 **Util.java**
 
+This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
+
 **data.txt**
+
+This file contains data for testing purpose.
 
 
 ## Instruction
