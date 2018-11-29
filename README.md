@@ -22,7 +22,7 @@ Yitong Hu   hu.yit@husky.neu.edu
 
 
 ## Schema
-**tables**
+**Tables**
 
 | Tables        | Classification           | 
 |:-------------:|:-------------:|
