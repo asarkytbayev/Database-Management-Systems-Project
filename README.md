@@ -4,6 +4,8 @@
 * [Description](#description)
 * [Team](#team)
 * [Schema](#schema)
+* [Deliverables](#Deliverables)
+* [instruction](#instruction)
 
 
 ## Description
@@ -27,7 +29,7 @@ Yitong Hu   hu.yit@husky.neu.edu
 | Product       | entity | 
 | InventoryRecord      | entity      | 
 | Customer | entity      |  
-| TheOrder | relation     |    
+| TheOrder | entity     |    
 | OrderRecord | relation     |   
 
 
@@ -80,5 +82,16 @@ Yitong Hu   hu.yit@husky.neu.edu
 
 **UML image**
 
-**descriptions of the files**
+## Deliverables
+**Helper.java**
 
+**OrderManager.java**
+
+**TestOrderManager.java**
+
+**Util.java**
+
+**data.txt**
+
+
+## Instruction
