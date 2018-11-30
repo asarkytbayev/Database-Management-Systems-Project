@@ -3,6 +3,7 @@
 ## Table of Contents
 * [Description](#description)
 * [Team](#team)
+* [Technology](#technology)
 * [Schema](#schema)
 * [Deliverables](#Deliverables)
 * [instruction](#instruction)
@@ -12,14 +13,18 @@
 OrderManager is an e-commerce program that enables a business to manage information about products that can be sold to customers, to track current inventories of products, and to process orders for products from customers. 
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
-[Learn more](http://www.ccis.northeastern.edu/home/pgust/classes/cs5200/2018/Fall/projects.html)
+[Learn more (see RDBMS3)](http://www.ccis.northeastern.edu/home/pgust/classes/cs5200/2018/Fall/projects.html)
 
 
 ## Team
-Azamat Sarkytbayev    sarkytbayev.a@husky.neu.edu
+* asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
 
-Yitong Hu   hu.yit@husky.neu.edu
+* yitonghu - Yitong Hu   &lt;hu.yit@husky.neu.edu&gt;
 
+## Technology
+JavaDB
+
+SQL
 
 ## Schema
 **Tables**
