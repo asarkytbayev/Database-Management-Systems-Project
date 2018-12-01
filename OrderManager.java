@@ -1,4 +1,3 @@
-package edu.northeastern.cs_5200;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

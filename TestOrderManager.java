@@ -1,4 +1,3 @@
-package edu.northeastern.cs_5200;
 
 import java.io.BufferedReader;
 import java.io.File;

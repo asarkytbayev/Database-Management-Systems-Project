@@ -5,7 +5,6 @@
  * @author Azamat Sarkytbayev
  *
  */
-package edu.northeastern.cs_5200;
 public class Helper {	
 	/**
 	 * stored function
