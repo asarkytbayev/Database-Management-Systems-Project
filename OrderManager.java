@@ -97,7 +97,7 @@ public class OrderManager {
             		" DETERMINISTIC" +
             		" NO SQL" +
             		" EXTERNAL NAME " +
-            		"	'edu.northeastern.cs_5200.Helper.isSKU'";
+            		"	'Helper.isSKU'";
             stmt.executeUpdate(createFunction_isSKU);
             System.out.println("Created stored function isSKU()");
             
