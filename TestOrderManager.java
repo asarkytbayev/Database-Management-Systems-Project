@@ -48,11 +48,11 @@ public class TestOrderManager {
 
 		
 		// names of the data files
-		String productsFile = "./src/products.txt";
-		String customerOneFile = "./src/customer1.txt";
-		String customerTwoFile = "./src/customer2.txt";
-		String customerThreeFile = "./src/customer3.txt";
-		String customerFourFile = "./src/customer4.txt";
+		String productsFile = "products.txt";
+		String customerOneFile = "customer1.txt";
+		String customerTwoFile = "customer2.txt";
+		String customerThreeFile = "customer3.txt";
+		String customerFourFile = "customer4.txt";
 
 		Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
@@ -175,7 +175,7 @@ public class TestOrderManager {
 				} catch (SQLException ex) {
 					// already exists
 					System.err.printf("Unable to insert Product %s\n", productName);
-					if (SQLState.LANG_CHECK_CONSTRAINT_VIOLATED.equals(ex.getSQLState())) { // check
+					if (SQLState.LANG_CHECK_CONSTRAINT_VIOLATED.equals(ex.getSQLState())) { 
 						System.err.printf("SKU '%s': %s\n", sku, ex.getMessage());
 					}
 					continue;
@@ -290,7 +290,7 @@ public class TestOrderManager {
 					Date shipmentDate = Date.valueOf(shipmentDateStr);
 					
 					
-					// check 
+					
 					queryRow_TheOrder.setInt(1, orderId);
 					queryRow_TheOrder.setInt(2, customerId);
 					queryRow_TheOrder.execute();
