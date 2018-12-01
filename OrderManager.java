@@ -125,7 +125,7 @@ public class OrderManager {
             		+ "  PRIMARY KEY (productSKU),"
 					+ "  CONSTRAINT FK_PRODUCT_SKU"
             		+ "  FOREIGN KEY (productSKU) REFERENCES Product (SKU) ON DELETE CASCADE,"
-            		+ "  CHECK (price >= 0.0 and number >= 0)" // check
+            		+ "  CHECK (price >= 0.0 and number >= 0)" 
             		+ ")";
             stmt.executeUpdate(createTable_InventoryRecord);
             System.out.println("Created entity table InventoryRecord"); 
@@ -148,7 +148,7 @@ public class OrderManager {
             stmt.executeUpdate(createTable_Customer);
             System.out.println("Created entity table Customer");
 
-            // create the TheOrder relation table
+            // create the TheOrder table
             String createTable_TheOrder =
             		  "CREATE TABLE TheOrder ("
             		+ "  id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
@@ -158,7 +158,7 @@ public class OrderManager {
 					+ "  CONSTRAINT PK_ORDER_ID"
             		+ "  PRIMARY KEY (id),"
 					+ "  CONSTRAINT FK_CUSTOMER_ID"
-					+ "  FOREIGN KEY (customerId) REFERENCES Customer (id)," // check
+					+ "  FOREIGN KEY (customerId) REFERENCES Customer (id),"
 					+ "  CONSTRAINT CHK_DATES"
 					+ "  CHECK (shipmentDate is null or orderDate <= shipmentDate)"
             		+ ")";
