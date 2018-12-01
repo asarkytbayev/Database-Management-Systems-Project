@@ -1,22 +1,28 @@
 # OrderManager: A Database for Managing Products and Orders
 
 ## Table of Contents
-* [Description](#description)
-* [Team](#team)
+* [Quick Overview](#quick-overview)
+* [Team Members](#team-members)
 * [Technology](#technology)
 * [Schema](#schema)
-* [Deliverables](#Deliverables)
-* [instruction](#instruction)
+* [Deliverables](#deliverables)
+* [Building OrderManager](#building-ordermanager)
+* [Running the Tests](#running-the-tests)
+* [Design Philosophy](#design-philosophy)
 
 
-## Description
+
+
+## Quick Overview
 OrderManager is an e-commerce program that enables a business to manage information about products that can be sold to customers, to track current inventories of products, and to process orders for products from customers. 
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
 
+Docs
 
 
-## Team
+
+## Team Members
 * asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
 * yitonghu - Yitong Hu &lt;hu.yit@husky.neu.edu&gt;
 
@@ -86,17 +92,18 @@ The RDBMS maintains information about products that can be ordered by costumers,
 **UML image**
 
 ## Deliverables
-### Essential modules
+
+### Modules
 
 - **OrderManager.java** - This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
-- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, zipCode, orderDate, shipmentDate, number bought. 
+- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, postalCode, orderDate, shipmentDate, number bought. 
 
 - **Helper.java** - This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
 
 - **Util.java** - This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
   
-### The raw data
+### Data Sets
 - **products.txt** - This file contains products data for testing purpose.
   
 - **customer1.txt** - This file contains data of the first order from customer Azamat Sarkytbayev for testing purpose.
@@ -107,4 +114,8 @@ The RDBMS maintains information about products that can be ordered by costumers,
 
 - **customer4.txt** - This file contains data of the second order from customer Azamat Sarkytbayev for testing purpose.
 
-## Instruction
+## Building OrderManager
+
+## Running the Tests
+
+## Design Philosophy
