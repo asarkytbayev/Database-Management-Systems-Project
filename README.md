@@ -1,19 +1,19 @@
 # OrderManager: A Database for Managing Products and Orders
 
 ## Table of Contents
-* [Quick Overview](#quick-overview)
-* [Team Members](#team-members)
+* [Overview](#overview)
+* [Team](#team)
 * [Technology](#technology)
 * [Schema](#schema)
 * [Deliverables](#deliverables)
-* [Building OrderManager](#building-ordermanager)
-* [Running the Tests](#running-the-tests)
+* [Build](#build)
+* [Tests](#tests)
 * [Philosophy](#philosophy)
+* [Todo](#todo)
 
 
 
-
-## Quick Overview
+## Overview
 OrderManager is an e-commerce program that enables a business to manage information about products that can be sold to customers, to track current inventories of products, and to process orders for products from customers. 
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
@@ -22,7 +22,7 @@ The RDBMS maintains information about products that can be ordered by costumers,
 
 
 
-## Team Members
+## Team 
 * asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
 * yitonghu - Yitong Hu &lt;hu.yit@husky.neu.edu&gt;
 
@@ -114,7 +114,7 @@ The RDBMS maintains information about products that can be ordered by costumers,
 
 - **customer4.txt** - This file contains data of the second order from customer Azamat Sarkytbayev for testing purpose.
 
-## Building OrderManager
+## Build
 
 ### Setup
 
@@ -152,6 +152,22 @@ Created trigger for inserting OrderRecord
 ```
 
 
-## Running the Tests
+## Tests
+
+### Testing strategy
+
+### Sample Output
+
+```bash
+
+```
 
 ## Philosophy
+
+
+More info: 
+
+
+More info: 
+possible Alternatives
+The raw data -> The tidy data set
