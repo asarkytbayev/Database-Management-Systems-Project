@@ -8,7 +8,7 @@
 * [Deliverables](#deliverables)
 * [Building OrderManager](#building-ordermanager)
 * [Running the Tests](#running-the-tests)
-* [Design Philosophy](#design-philosophy)
+* [Philosophy](#philosophy)
 
 
 
@@ -18,7 +18,7 @@ OrderManager is an e-commerce program that enables a business to manage informat
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
 
-Docs
+
 
 
 
@@ -116,6 +116,42 @@ Docs
 
 ## Building OrderManager
 
+### Setup
+
+In order to build OrderManager, you need to have the Java Development Kit (JDK) and the Apache Derby software. See [installation tutorial](https://db.apache.org/derby/papers/DerbyTut/install_software.html) for more info.
+
+Clone or download a copy of OrderManager to your chosen location, open it in local development environment.
+
+After installation, embed Apache Derby in this Java project. In your Java Build Path, add derby.jar and derbyclient.jar files as external libraries from the Derby directory.
+
+### Run
+
+Run OrderManager.java as Java Application.
+
+### Sample Output
+
+```bash
+Connected to and created database orderManager
+
+# drop the database triggers, tables, and stored functions, recreate them below
+Dropped trigger OrderRecordInsert
+Dropped table OrderRecord
+Dropped table TheOrder
+Dropped table Customer
+Dropped table InventoryRecord
+Dropped table Product
+Dropped stored function isSKU()
+
+Created stored function isSKU()
+Created entity table Product
+Created entity table InventoryRecord
+Created entity table Customer
+Created relation table TheOrder
+Created relation table OrderRecord
+Created trigger for inserting OrderRecord
+```
+
+
 ## Running the Tests
 
-## Design Philosophy
+## Philosophy
