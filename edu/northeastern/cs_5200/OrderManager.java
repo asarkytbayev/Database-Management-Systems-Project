@@ -152,14 +152,14 @@ public class OrderManager {
             // create the TheOrder relation table
             String createTable_TheOrder =
             		  "CREATE TABLE TheOrder ("
-                + "  id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
+            		+ "  id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),"
             		+ "  customerId INT NOT NULL,"
             		+ "  orderDate DATE NOT NULL,"
             		+ "  shipmentDate DATE," // can be null
 					+ "  CONSTRAINT PK_ORDER_ID"
             		+ "  PRIMARY KEY (id),"
 					+ "  CONSTRAINT FK_CUSTOMER_ID"
-                + "  FOREIGN KEY (customerId) REFERENCES Customer (id)," // check
+					+ "  FOREIGN KEY (customerId) REFERENCES Customer (id)," // check
 					+ "  CONSTRAINT CHK_DATES"
 					+ "  CHECK (shipmentDate is null or orderDate <= shipmentDate)"
             		+ ")";
@@ -170,14 +170,14 @@ public class OrderManager {
             String createTable_OrderRecord =
             		  "CREATE TABLE OrderRecord ("
             		+ "  orderId INT NOT NULL,"
-            		+ "  productSKU CHAR(12) NOT NULL,"
             		+ "  number INT NOT NULL,"
-                + "  inventoryPrice DECIMAL(18,2) NOT NULL," 
+            		+ "  inventoryPrice DECIMAL(18,2) NOT NULL," 
+            		+ "  productSKU CHAR(12) NOT NULL,"
 					+ "  CONSTRAINT PK_ORDER_RECORD_ID"
         		    + "  PRIMARY KEY (orderId, productSKU),"
 					+ "  CONSTRAINT FK_ORDER_ID"
-                + "  FOREIGN KEY (orderId) REFERENCES TheOrder (id),"
-                + "  FOREIGN KEY (productSKU) REFERENCES Product (SKU) ON DELETE CASCADE"
+					+ "  FOREIGN KEY (orderId) REFERENCES TheOrder (id),"
+					+ "  FOREIGN KEY (productSKU) REFERENCES Product (SKU) ON DELETE CASCADE"
             		+ ")";
             stmt.executeUpdate(createTable_OrderRecord);
             System.out.println("Created relation table OrderRecord"); 

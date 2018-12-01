@@ -1,0 +1,9 @@
+Keyboard	Typewriter-style device		AB-123456-0N	100	15.56
+
+Monitor		Output display device		DC-835790-AB	100	30.00
+
+Mouse		Input device moves cursor	EE-345987-30	100	3.24
+
+Cable		Wires covered in a plastic	OU-436713-X2	100	5.78
+
+Processor	IC drives the computer		YW-968406-5T	100	399.99
