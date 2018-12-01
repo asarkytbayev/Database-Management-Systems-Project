@@ -88,41 +88,23 @@ The RDBMS maintains information about products that can be ordered by costumers,
 ## Deliverables
 ### Essential modules
 
-- **OrderManager.java**
+- **OrderManager.java** - This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
-  This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
+- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, zipCode, orderDate, shipmentDate, number bought. 
 
-- **TestOrderManager.java**
+- **Helper.java** - This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
 
-  This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, zipCode, orderDate, shipmentDate, number bought. 
-
-- **Helper.java**
-
-  This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
-
-- **Util.java**
-
-  This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
+- **Util.java** - This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
   
 ### The raw data
-- **products.txt**
-
-  This file contains products data for testing purpose.
+- **products.txt** - This file contains products data for testing purpose.
   
-- **customer1.txt**
+- **customer1.txt** - This file contains data of the first order from customer Azamat Sarkytbayev for testing purpose.
 
-  This file contains data of the first order from customer Azamat Sarkytbayev for testing purpose.
+- **customer2.txt** - This file contains data of order from customer Philip Gust for testing purpose.
 
-- **customer2.txt**
+- **customer3.txt** - This file contains data of order from customer Yitong Hu for testing purpose.
 
-  This file contains data of order from customer Philip Gust for testing purpose.
-
-- **customer3.txt**
-
-  This file contains data of order from customer Yitong Hu for testing purpose.
-
-- **customer4.txt**
-
-  This file contains data of the second order from customer Azamat Sarkytbayev for testing purpose.
+- **customer4.txt** - This file contains data of the second order from customer Azamat Sarkytbayev for testing purpose.
 
 ## Instruction
