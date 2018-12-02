@@ -133,7 +133,7 @@ public class TestOrderManager {
 				int value = 1;
 				String restart = "ALTER TABLE Customer ALTER COLUMN id RESTART WITH " + value;
 				stmt.executeUpdate(restart);
-				System.out.println("Reset Customer id column");
+				System.out.println("Reset Customer identity column");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -142,7 +142,7 @@ public class TestOrderManager {
 				int value = 1;
 				String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
 				stmt.executeUpdate(restart);
-				System.out.println("Reset TheOrder id column");
+				System.out.println("Reset TheOrder identity column");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}			
@@ -226,7 +226,7 @@ public class TestOrderManager {
 				try {
 					String restart = "ALTER TABLE Customer ALTER COLUMN id RESTART WITH " + customerId;
 					stmt.executeUpdate(restart);
-					System.out.println("Reset Customer id column");
+					System.out.println("Reset Customer identity column");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -234,7 +234,7 @@ public class TestOrderManager {
 				try {
 					String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
 					stmt.executeUpdate(restart);
-					System.out.println("Reset TheOrder id column");
+					System.out.println("Reset TheOrder identity column");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
