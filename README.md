@@ -97,7 +97,7 @@ The RDBMS maintains information about products that can be ordered by costumers,
 
 - **OrderManager.java** - This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
-- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation tables for the TheOrder and OrderRecord relations. The sample data is stored in two tab-separated data files. The columns of file data1 are: name, description, SKU, number, price. The columns of file data2 are: productName, SKU, price, customerName, address, city, state, country, postalCode, orderDate, shipmentDate, number bought. 
+- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation table for OrderRecord relation. The sample data is stored in five tab-separated data files. 
 
 - **Helper.java** - This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
 
@@ -155,6 +155,36 @@ Created trigger for inserting OrderRecord
 ## Tests
 
 ### Testing strategy
+
+#### Stored function
+
+The database has one stored function for the purpose of validating product sku type. Before the code that adds values to the database, create tests that invoke the function using a values query with representative value from data file, as well as with invalid value.
+
+#### CHECK constraint evaluation
+
+The database has three tables containing CHECK constraint. Product table has a CHECK with SKU column using the isSKU stored function, InventoryRecord table has CHECK with both price column and number column, and TheOrder table has CHECK with both orderDate column and shipmentDate column.
+
+If the value being added to an attribute of a tuple violates the CHECK constraint, the check constraint evaluates to false. The corresponding database update is aborted, and a SQLException is thrown.
+
+```bash
+try {
+   ...
+} catch (SQLException ex) {
+   ...
+   # print error message
+   if (SQLState.LANG_CHECK_CONSTRAINT_VIOLATED.equals(ex.getSQLState())) { 
+      System.err.printf("SKU '%s': %s\n", sku, ex.getMessage());
+   }
+   continue;
+}
+```
+
+ CHECK (isSKU(SKU))
+ CHECK (price >= 0.0 and number >= 0)
+TheOrder CHECK (shipmentDate is null or orderDate <= shipmentDate)
+
+
+The sample data is stored in five tab-separated data files. Po
 
 ### Sample Output
 
