@@ -183,7 +183,6 @@ try {
 ```
 
 ### Populating Product and InventoryRecord tables
-
 * Use one while loop to read all the lines in products.txt
 * Commit insertions
 * Print Product and InventoryRecord tables
@@ -208,16 +207,21 @@ try {
   ```
 ### Populating Customer, TheOrder and OrderRecord tables
 * Use one for loop to iterate through all five customer data files
-
-* Before insertion into the tables, query TheOrder and Customer tables respectively to get the value of identity column (order id for TheOrder table, customer id for Customer table). For example, for TheOrder table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder":
+* Before insertion into the tables, query TheOrder and Customer tables respectively to get the last inserted value of identity column (order id for TheOrder table, customer id for Customer table). For example, for TheOrder table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder":
   ```bash
   int orderId = 0;
   String findId = "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder";
   rs = stmt.executeQuery(findId);
   if (rs.next()) {
-     # if TheOrder table is not empty, retrieve the last orderId, increment it by 1 to get the new order id
+     # if TheOrder table is not empty, retrieve the last orderId
      Integer result = rs.getInt(1);
-     orderId = result + 1;
+     # if the order transaction has been rolled back, just use it as the new order id
+     if (isRolledBack) { 
+	    orderId = result;
+     } else { 
+        # if no rollback happens, increment it by 1 to get the new order id
+	    orderId = result + 1;
+     }
      System.out.println("new OrderId: " + orderId);
   } else {
      # if TheOrder table is empty, set orderId to 1
@@ -226,7 +230,6 @@ try {
   }
   rs.close();
   ```
-  
 * Reset the identity column value in TheOrder table, in case insertion into the OrderRecord table fails due to a constraint violation, causing all the changes since starting the order transaction to be rolled back. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
   ```bash
   try {
@@ -237,6 +240,7 @@ try {
      System.err.println(e.getMessage());
   }
   ```
+  The necessity of this operation lies in identity column attribute. See [Auto-increment Handling](#auto-increment-handling) for more info.
 *
 
 * Inside the for loop, use one while loop to read all the lines in each customer data file
