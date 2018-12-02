@@ -154,13 +154,11 @@ Created trigger for inserting OrderRecord
 
 ## Tests
 
-### Testing strategy
-
-#### Stored function
+### Stored function
 
 The database has one stored function for the purpose of validating product sku type. Before the code that adds values to the database, create tests that invoke the function using a values query with representative value from data file, as well as with invalid value.
 
-#### CHECK constraint evaluation
+### CHECK constraint evaluation
 
 The database has three tables containing CHECK constraint. Product table has a CHECK with SKU column using the isSKU stored function, InventoryRecord table has CHECK with both price column and number column, and TheOrder table has CHECK with both orderDate column and shipmentDate column.
 
@@ -178,15 +176,80 @@ try {
    continue;
 }
 ```
+### Auto-increment Handling
 
- CHECK (isSKU(SKU))
- CHECK (price >= 0.0 and number >= 0)
-TheOrder CHECK (shipmentDate is null or orderDate <= shipmentDate)
+Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+
+OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+```bash
+try {
+   int value = 1;
+   String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
+			stmt.executeUpdate(restart);
+			System.out.println("Reset TheOrder id column");
+} catch (SQLException e) {
+			e.printStackTrace();
+}
+```
+The same logic is also executed in Customer table.
+
+Before any values are added to the database, reset the auto-increment field values in Customer and TheOrder tables for check purpose.
+
+### Populating Product and InventoryRecord tables
+
+* Use one while loop to read all the lines in products.txt
+* Commit insertions
+* Print Product and InventoryRecord tables
+
+  Sample Output:
+  ```bash
+  Products:
+  SKU             	 Name          Description     
+  AB-123456-0N    	 Keyboard      Typewriter-style device
+  DC-835790-AB    	 Monitor       Output display device
+  EE-345987-30    	 Mouse         Input device moves cursor
+  OU-436713-X2    	 Cable         Wires covered in a plastic
+  YW-968406-5T    	 Processor     IC drives the computer
+
+  InventoryRecord:
+  SKU             	 Number        Price           
+  AB-123456-0N    	 100	       15.56
+  DC-835790-AB    	 100	       30.00
+  EE-345987-30    	 100	       3.24
+  OU-436713-X2    	 100	       5.78
+  YW-968406-5T    	 100	       399.99
+  ```
+### Populating Customer, TheOrder and OrderRecord tables
+* Use one for loop to iterate through all four customer data files
+* Before insertion into the tables, query TheOrder and Customer tables respectively to get the value of IDENTITY field (order id for TheOrder table, customer id for Customer table). For example, for Customer table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM Customer":
+  ```bash
+  int customerId = 0;
+  findId = "SELECT IDENTITY_VAL_LOCAL() FROM Customer";
+  rs = stmt.executeQuery(findId);
+  if (rs.next()) { 
+     Integer result = rs.getInt(1);
+     # if Customer table is not empty, increment customerId 
+     customerId = result+1;
+     System.out.println("new CustomerId: " + customerId);
+  } else { 
+     # if Customer table is empty, set customerId to 1
+     customerId = 1;
+     System.out.println("No values in the table Customer. new CustomerId: " + customerId);
+  }
+  rs.close();
+  ```
+* Reset the auto-increment field value in TheOrder table, in case insertion into the table fails and is rolled back due to a constraint violation
+*
+
+* Inside the for loop, use one while loop to read all the lines in each customer data file
+* Commit insertions
+* Print Product and InventoryRecord tables
+Sample Output
+```bash
+```
 
 
-The sample data is stored in five tab-separated data files. Po
 
-### Sample Output
 
 ```bash
 
