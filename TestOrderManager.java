@@ -17,7 +17,7 @@ import org.apache.derby.shared.common.reference.SQLState;
 
 /**
  * This program tests the version of the manager database tables for OrderManager
- * that uses relation tables for the TheOrder and OrderRecord relations. The sample
+ * that uses relation table for OrderRecord relation. The sample
  * data is stored in five tab-separated data files. 
  *
  * @author Yitong Hu
