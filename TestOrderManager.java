@@ -242,7 +242,15 @@ public class TestOrderManager {
 					System.out.println("No values in the table Customer. new CustomerId: " + customerId);
 				}
 				
-				// resets the identity field's value - in case insertion fails
+				// resets the identity field's value 
+				try {
+					String restart = "ALTER TABLE Customer ALTER COLUMN id RESTART WITH " + customerId;
+					stmt.executeUpdate(restart);
+					System.out.println("Reset Customer identity column");
+				} catch (SQLException e) {
+					System.err.println(e.getMessage());
+				}
+				
 				try {
 					String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
 					stmt.executeUpdate(restart);
