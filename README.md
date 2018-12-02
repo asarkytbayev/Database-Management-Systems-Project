@@ -178,10 +178,25 @@ try {
    continue;
 }
 ```
+#### Auto-increment Handling
 
- CHECK (isSKU(SKU))
- CHECK (price >= 0.0 and number >= 0)
-TheOrder CHECK (shipmentDate is null or orderDate <= shipmentDate)
+Customer table and TheOrder table both use an auto-increment field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+
+OrderManager solves the issue by resetting the auto-increment column value. For example, for Customer table, id is the auto-increment field with value customerId failing to be rolled back. Use the SQL syntax "ALTER TABLE Customer ALTER COLUMN id RESTART WITH ":
+```bash
+try {
+   String restart = "ALTER TABLE Customer ALTER COLUMN id RESTART WITH " + customerId;
+   stmt.executeUpdate(restart);
+   System.out.println("Reset Customer id column");
+} catch (SQLException e) {
+   e.printStackTrace();
+}
+```
+The same logic is also executed in TheOrder table.
+
+Before any values are added to the database, reset the auto-increment field values in Customer and TheOrder tables for check purpose.
+
+#### Populating Product and InventoryRecord tables
 
 
 The sample data is stored in five tab-separated data files. Po
