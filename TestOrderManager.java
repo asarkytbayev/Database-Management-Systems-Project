@@ -204,6 +204,7 @@ public class TestOrderManager {
 			// files to read
 			BufferedReader[] brs = new BufferedReader[] { br1, br2, br3, br4, br5 };
 			
+			boolean isRolledBack = false;
 			for (BufferedReader br : brs) {
 				// gets orderId from identity field from TheOrder table
 				int orderId = 0;
@@ -211,7 +212,11 @@ public class TestOrderManager {
 				rs = stmt.executeQuery(findId);
 				if (rs.next()) {
 					Integer result = rs.getInt(1);
-					orderId = result+1;
+					if (isRolledBack) {
+						orderId = result;
+					} else {
+						orderId = result + 1;
+					}
 					System.out.println("new OrderId: " + orderId);
 				} else {
 					orderId = 1;
@@ -225,7 +230,12 @@ public class TestOrderManager {
 				rs = stmt.executeQuery(findId);
 				if (rs.next()) {
 					Integer result = rs.getInt(1);
-					customerId = result+1;
+					if (isRolledBack) {
+						customerId = result;
+						isRolledBack = false;
+					} else {
+						customerId = result + 1;
+					}
 					System.out.println("new CustomerId: " + customerId);
 				} else {
 					customerId = 1;
@@ -266,16 +276,7 @@ public class TestOrderManager {
 					String postalCode = data[8];
 					
 					try {
-						insertRow_Customer.setString(1, name);
-						insertRow_Customer.setString(2, address);
-						insertRow_Customer.setString(3, city);
-						insertRow_Customer.setString(4, state);
-						insertRow_Customer.setString(5, country);
-						insertRow_Customer.setString(6, postalCode);
-						insertRow_Customer.execute();
-					} catch (SQLException e) {
-						// if customer is already in the table
-						// find its id
+						// if customer is already in the table, find his/her id
 						queryRow_Customer.setString(1, name);
 						queryRow_Customer.setString(2, address);
 						queryRow_Customer.setString(3, city);
@@ -286,8 +287,18 @@ public class TestOrderManager {
 						rs = queryRow_Customer.getResultSet();
 						if (rs.next()) {
 							customerId = rs.getInt(1);
+						} else {
+							insertRow_Customer.setString(1, name);
+							insertRow_Customer.setString(2, address);
+							insertRow_Customer.setString(3, city);
+							insertRow_Customer.setString(4, state);
+							insertRow_Customer.setString(5, country);
+							insertRow_Customer.setString(6, postalCode);
+							insertRow_Customer.execute();
 						}
 						rs.close();
+					} catch (SQLException e) {
+						System.err.println(e.getMessage());
 					}
 					
 					// gets order date and shipment date
@@ -296,29 +307,26 @@ public class TestOrderManager {
 					Date orderDate = Date.valueOf(orderDateStr);
 					Date shipmentDate = Date.valueOf(shipmentDateStr);
 					
-					
-					
-					queryRow_TheOrder.setInt(1, orderId);
-					queryRow_TheOrder.setInt(2, customerId);
-					queryRow_TheOrder.execute();
-					rs = queryRow_TheOrder.getResultSet();
-					if (rs != null) {
+					try {
+						queryRow_TheOrder.setInt(1, orderId);
+						queryRow_TheOrder.setInt(2, customerId);
+						queryRow_TheOrder.execute();
+						rs = queryRow_TheOrder.getResultSet();
 						if (rs.next()) {
 							Integer result = rs.getInt(1);
 							if (result == 1) {
-								// no need to insert the order
+								// no need to insert the order once again
 							} else {
-								// add a single theorder entry for a given customer order 
-								try {
-									insertRow_TheOrder.setInt(1, customerId);
-									insertRow_TheOrder.setDate(2, orderDate);
-									insertRow_TheOrder.setDate(3, shipmentDate);
-									insertRow_TheOrder.execute();
-								} catch (SQLException e) {
-									System.err.println(e.getMessage());
-								}
+								// add a single TheOrder entry for a given customer's order
+								insertRow_TheOrder.setInt(1, customerId);
+								insertRow_TheOrder.setDate(2, orderDate);
+								insertRow_TheOrder.setDate(3, shipmentDate);
+								insertRow_TheOrder.execute();
 							}
 						}
+					} catch (SQLException e) {
+						isRolledBack = true;
+						System.err.println(e.getMessage()); 
 					}
 					
 					// gets order info
@@ -342,12 +350,13 @@ public class TestOrderManager {
 							System.err.println("Insufficient stock! Customer " + name + " attempted to buy more items than in stock. Rolling back");
 							conn.rollback(sp);
 							// process next customer's order
+							isRolledBack = true;
 							break;
 						}
 						System.err.println(e.getMessage());
 					}
 					
-				}
+				} // end while
 				if (rs != null) {
 					rs.close();
 				}
