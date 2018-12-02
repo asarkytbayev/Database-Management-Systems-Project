@@ -184,6 +184,7 @@ try {
 
 ### Populating Product and InventoryRecord tables
 * Use one while loop to read all the lines in products.txt
+* Insert data table by table
 * Commit insertions
 * Print Product and InventoryRecord tables
 
@@ -230,7 +231,7 @@ try {
   }
   rs.close();
   ```
-* Reset the identity column value in TheOrder table, in case insertion into the OrderRecord table fails due to a constraint violation, causing all the changes since starting the order transaction to be rolled back. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+* Set the identity column value in TheOrder table. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
   ```bash
   try {
      String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
@@ -240,15 +241,21 @@ try {
      System.err.println(e.getMessage());
   }
   ```
-  The necessity of this operation lies in identity column attribute. See [Auto-increment Handling](#auto-increment-handling) for more info.
-*
-
+  The necessity of this operation lies in identity column attribute. See [Auto-increment Handling](#auto-increment-handling) for more info. 
+* Create a save point before adding values in each customer data file to the database
 * Inside the for loop, use one while loop to read all the lines in each customer data file
+* Insert data table by table
+
+  Query tables first to avoid duplicate insertion and retrieve corresponding identity column values. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+  ```bash
+  
+  ```
+  
+  in case insertion into the OrderRecord table fails due to a constraint violation, causing all the changes since starting the order transaction to be rolled back. 
 * Commit insertions
 * Print Product and InventoryRecord tables
 Sample Output
-```bash
-```
+
 
 
 
@@ -260,17 +267,14 @@ Sample Output
 ## Philosophy
 
  numeric gensym design
- Auto-increment Handling
-
-Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
-
-OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
-More info: 
 ### Auto-increment Handling
 
 Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
 
 OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+More info: 
+
+
 ```bash
 try {
    int value = 1;
