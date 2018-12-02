@@ -21,10 +21,8 @@ The RDBMS maintains information about products that can be ordered by costumers,
 Detailed project [specification](./ProjectDescription.pdf)
 
 ## Team 
-* asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
-[github profile](https://github.com/asarkytbayev)
-* yitonghu - Yitong Hu &lt;hu.yit@husky.neu.edu&gt;
-[github profile](https://github.com/lightlyh)
+* asarkytbayev - [Azamat Sarkytbayev](https://github.com/asarkytbayev) &lt;sarkytbayev.a@husky.neu.edu&gt;
+* yitonghu - [Yitong Hu](https://github.com/lightlyh) &lt;hu.yit@husky.neu.edu&gt;
 
 ## Technology
 * JavaDB
