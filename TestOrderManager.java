@@ -18,10 +18,7 @@ import org.apache.derby.shared.common.reference.SQLState;
 /**
  * This program tests the version of the manager database tables for OrderManager
  * that uses relation tables for the TheOrder and OrderRecord relations. The sample
- * data is stored in two tab-separated data files. The columns of file data1 are:
- * name, description, SKU, number, price. The columns of file data2 are: 
- * productName, SKU, price, customerName, address, city, state, country, zipCode, 
- * orderDate, shipmentDate, number bought. 
+ * data is stored in five tab-separated data files. 
  *
  * @author Yitong Hu
  * @author Azamat Sarkytbayev
