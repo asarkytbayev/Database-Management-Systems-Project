@@ -27,7 +27,7 @@ public class Util {
 			ResultSet rs = stmt.executeQuery(
 					"SELECT name, description, SKU FROM Product ORDER BY SKU");
 		) {
-			System.out.println("Products:");
+			System.out.println("\nProducts:");
 			System.out.printf("%-16s\t%-16s\t%-16s\n", "SKU", "Name", "Description");
 			int count = 0;
 			while (rs.next()) {
@@ -52,14 +52,14 @@ public class Util {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT productSKU, number, price FROM InventoryRecord ORDER BY productSKU");
 		) {
-			System.out.println("InventoryRecord:");
+			System.out.println("\nInventoryRecord:");
 			System.out.printf("%-16s\t%-16s\t%-16s\n", "SKU", "Number", "Price");
 			int count = 0;
 			while (rs.next()) {
 				String SKU = rs.getString(1);
 				Integer number = rs.getInt(2);
 				Double price = rs.getDouble(3);
-				System.out.printf("%-16s\t%d\t%.2f\n", SKU, number, price);
+				System.out.printf("%-16s\t%-16d\t%-16.2f\n", SKU, number, price);
 				count++;
 			}
 			return count;
@@ -78,8 +78,8 @@ public class Util {
 		    // results
 		    ResultSet rs = stmt.executeQuery("SELECT id, name, address, city, state, country, postalCode FROM Customer ORDER BY id");
 		) {
-			System.out.println("Customers:");
-			System.out.printf("%-4s\t%-16s\t%-16s\t%-16s\t%-4s\t%-16s\t%-8s\n", "ID", "Name", "Address", "City", "State", "Country", "Postal Code");
+			System.out.println("\nCustomers:");
+			System.out.printf("%-4s\t%-16s\t%-32s\t%-12s\t%-4s\t%-8s\t%-8s\n", "ID", "Name", "Address", "City", "State", "Country", "Postal Code");
 			int count = 0;
 			while (rs.next()) {
 				Integer id = rs.getInt(1);
@@ -89,7 +89,7 @@ public class Util {
 				String state = rs.getString(5);
 				String country = rs.getString(6);
 				String postalCode = rs.getString(7);
-				System.out.printf("%-4d\t%-16s\t%-16s\t%-16s\t%-4s\t%-16s\t%-8s\n", id, name, address, city, state, country, postalCode);
+				System.out.printf("%-4d\t%-16s\t%-32s\t%-12s\t%-4s\t%-8s\t%-8s\n", id, name, address, city, state, country, postalCode);
 				++count;
 			}
 			return count;
@@ -106,7 +106,7 @@ public class Util {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT id, customerId, orderDate, shipmentDate FROM TheOrder ORDER BY id");
 		) {
-			System.out.println("TheOrder:");
+			System.out.println("\nTheOrder:");
 			System.out.printf("%-4s\t%-16s\t%-16s\t%-16s\n", "ID", "Customer ID", "Order Date", "Shipment Date");
 			int count = 0;
 			while (rs.next()) {
@@ -132,7 +132,7 @@ public class Util {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT orderId, number, inventoryPrice, productSKU FROM OrderRecord ORDER BY orderId")
 		) {
-			System.out.println("OrderRecord:");
+			System.out.println("\nOrderRecord:");
 			System.out.printf("%-16s\t%-16s\t%-16s\t%-16s\n", "Order ID", "Number", "Price", "SKU");
 			int count = 0;
 			while (rs.next()) {
@@ -140,7 +140,7 @@ public class Util {
 				Integer quantity = rs.getInt(2);
 				Double price = rs.getDouble(3);
 				String SKU = rs.getString(4);
-				System.out.printf("%d\t%d\t%.2f\t%s\n", id, quantity, price, SKU);
+				System.out.printf("%-16d\t%-16d\t%-16.2f\t%-16s\n", id, quantity, price, SKU);
 				count++;
 			}
 			return count;

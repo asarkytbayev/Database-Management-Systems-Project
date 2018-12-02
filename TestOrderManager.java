@@ -45,10 +45,17 @@ public class TestOrderManager {
 		
 		// names of the data files
 		String productsFile = "products.txt";
+		// customer ordering a single item
 		String customerOneFile = "customer1.txt";
+		// customer ordering two items
 		String customerTwoFile = "customer2.txt";
+		// customer ordering three items
 		String customerThreeFile = "customer3.txt";
+		// customer orders more than in stock - transaction will be rolled back
 		String customerFourFile = "customer4.txt";
+		// customer with a shipment date earlier than order date - will fail
+		String customerFiveFile = "customer5.txt";
+		
 
 		Properties props = new Properties(); // connection properties
         // providing a user name and password is optional in the embedded
@@ -65,6 +72,7 @@ public class TestOrderManager {
 			BufferedReader br2 = new BufferedReader(new FileReader(new File(customerTwoFile)));
 			BufferedReader br3 = new BufferedReader(new FileReader(new File(customerThreeFile)));
 			BufferedReader br4 = new BufferedReader(new FileReader(new File(customerFourFile)));
+    		BufferedReader br5 = new BufferedReader(new FileReader(new File(customerFiveFile)));
 
 			// connects to db
 			Connection conn = DriverManager.getConnection(connStr, props);
@@ -135,7 +143,7 @@ public class TestOrderManager {
 				stmt.executeUpdate(restart);
 				System.out.println("Reset CustomerId identity column");
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 			
 			try {
@@ -144,7 +152,7 @@ public class TestOrderManager {
 				stmt.executeUpdate(restart);
 				System.out.println("Reset OrderId identity column");
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}			
 			
 			System.out.println("Inserting data into Product and InventoryRecord tables");
@@ -187,12 +195,14 @@ public class TestOrderManager {
 					System.err.printf("Unable to insert InventoryRecord sku %s\n", sku);
 				}
 			}
-			System.out.println("Committing insertions");
+			System.out.println("Committing insertions into Product and InventoryRecord tables");
 			conn.commit();
 			Util.printProduct(conn);
 			Util.printInventoryRecord(conn);
+			System.out.println();
 			
-			BufferedReader[] brs = new BufferedReader[] { br1, br2, br3, br4 };
+			// files to read
+			BufferedReader[] brs = new BufferedReader[] { br1, br2, br3, br4, br5 };
 			
 			for (BufferedReader br : brs) {
 				// gets orderId from identity field from TheOrder table
@@ -228,7 +238,7 @@ public class TestOrderManager {
 					stmt.executeUpdate(restart);
 					System.out.println("Reset CustomerId identity column");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					System.err.println(e.getMessage());
 				}
 				
 				try {
@@ -236,7 +246,7 @@ public class TestOrderManager {
 					stmt.executeUpdate(restart);
 					System.out.println("Reset OrderId identity column");
 				} catch (SQLException e) {
-					e.printStackTrace();
+					System.err.println(e.getMessage());
 				}
 				
 				Savepoint sp = conn.setSavepoint("Orders");
@@ -305,7 +315,7 @@ public class TestOrderManager {
 									insertRow_TheOrder.setDate(3, shipmentDate);
 									insertRow_TheOrder.execute();
 								} catch (SQLException e) {
-									e.printStackTrace();
+									System.err.println(e.getMessage());
 								}
 							}
 						}
@@ -329,12 +339,12 @@ public class TestOrderManager {
 						// than in stock
 						if (SQLState.LANG_CHECK_CONSTRAINT_VIOLATED.equals(e.getSQLState())) {
 							// rollback
-							System.err.println("Insufficient stock! Rolling back");
+							System.err.println("Insufficient stock! Customer " + name + " attempted to buy more items than in stock. Rolling back");
 							conn.rollback(sp);
 							// process next customer's order
 							break;
 						}
-						e.printStackTrace();
+						System.err.println(e.getMessage());
 					}
 					
 				}
@@ -342,11 +352,11 @@ public class TestOrderManager {
 					rs.close();
 				}
 				conn.releaseSavepoint(sp);
-				System.out.println("Committing insertions.");
+				System.out.println("Committing insertions into Customer, THeOrder and OrderRecord tables.");
 				conn.commit();
 			}
 			
-			System.out.println("Updated Inventory Record");
+			System.out.println("\nUpdated Inventory Record:");
 			Util.printInventoryRecord(conn);
 			Util.printCustomers(conn);
 			Util.printTheOrder(conn);
@@ -357,16 +367,16 @@ public class TestOrderManager {
 			conn.setAutoCommit(true);
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (rs != null) {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 		}
 	}
