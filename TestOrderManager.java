@@ -30,7 +30,6 @@ public class TestOrderManager {
 	 * Runs the program
 	 * @param args
 	 */
-	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 		// the default framework is embedded
 	    String protocol = "jdbc:derby:";
@@ -208,6 +207,7 @@ public class TestOrderManager {
 					orderId = 1;
 					System.out.println("No values in the table TheOrder. new OrderId: " + orderId);
 				}
+				rs.close();
 				
 				// gets customerId from identity field from Customer table
 				int customerId = 0;
