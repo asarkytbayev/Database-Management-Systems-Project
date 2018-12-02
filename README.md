@@ -18,13 +18,13 @@ OrderManager is an e-commerce program that enables a business to manage informat
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
 
-
-
-
+Detailed project [specification](./ProjectDescription.pdf)
 
 ## Team 
 * asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
+[github profile](https://github.com/asarkytbayev)
 * yitonghu - Yitong Hu &lt;hu.yit@husky.neu.edu&gt;
+[github profile](https://github.com/lightlyh)
 
 ## Technology
 * JavaDB
