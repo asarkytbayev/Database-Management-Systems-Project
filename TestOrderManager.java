@@ -244,14 +244,6 @@ public class TestOrderManager {
 				
 				// resets the identity field's value - in case insertion fails
 				try {
-					String restart = "ALTER TABLE Customer ALTER COLUMN id RESTART WITH " + customerId;
-					stmt.executeUpdate(restart);
-					System.out.println("Reset Customer identity column");
-				} catch (SQLException e) {
-					System.err.println(e.getMessage());
-				}
-				
-				try {
 					String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
 					stmt.executeUpdate(restart);
 					System.out.println("Reset TheOrder identity column");
