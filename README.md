@@ -18,7 +18,7 @@ OrderManager is an e-commerce program that enables a business to manage informat
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
 
-Detailed project [specification](./ProjectDescription.pdf)
+See [specification](./ProjectDescription.pdf) for more details.
 
 ## Team 
 * asarkytbayev - [Azamat Sarkytbayev](https://github.com/asarkytbayev) &lt;sarkytbayev.a@husky.neu.edu&gt;
@@ -95,7 +95,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 
 - **OrderManager.java** - This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
-- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation table for OrderRecord relation. The sample data is stored in five tab-separated data files. 
+- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation table for OrderRecord relation. The sample data is stored in six tab-separated data files. 
 
 - **Helper.java** - This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
 
@@ -104,15 +104,22 @@ Detailed project [specification](./ProjectDescription.pdf)
 ### Data Sets
 - **products.txt** - This file contains products data for testing purpose.
   
-- **customer1.txt** - This file contains data of the first order from customer Azamat Sarkytbayev for testing purpose.
+- **customer1.txt** - This file contains data of customer Azamat Sarkytbayev's first order with a single kind of item.
 
-- **customer2.txt** - This file contains data of order from customer Philip Gust for testing purpose.
+- **customer2.txt** - This file contains data of customer Philip Gust's order with two kinds of items.
 
-- **customer3.txt** - This file contains data of order from customer Yitong Hu for testing purpose.
+- **customer3.txt** - This file contains data of customer Yitong Hu's order with three kinds of items.
 
-- **customer4.txt** - This file contains data of the second order from customer Azamat Sarkytbayev for testing purpose.
+- **customer4.txt** - This file contains data of customer Azamat Sarkytbayev's second order with a single kind of item, whose number happens to surpass the corresponding inventory.
 
-## Build
+- **customer5.txt** - This file contains data of customer P.K. Agarwal's order with a single kind of item, where the shipment date is earlier than order date.
+
+### Doc
+
+- **ProjectDescription.pdf** - This file is the project specification.
+
+
+## Build 
 
 ### Setup
 
@@ -174,24 +181,6 @@ try {
    continue;
 }
 ```
-### Auto-increment Handling
-
-Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
-
-OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
-```bash
-try {
-   int value = 1;
-   String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
-			stmt.executeUpdate(restart);
-			System.out.println("Reset TheOrder id column");
-} catch (SQLException e) {
-			e.printStackTrace();
-}
-```
-The same logic is also executed in Customer table.
-
-Before any values are added to the database, reset the auto-increment field values in Customer and TheOrder tables for check purpose.
 
 ### Populating Product and InventoryRecord tables
 
@@ -218,25 +207,36 @@ Before any values are added to the database, reset the auto-increment field valu
   YW-968406-5T    	 100	       399.99
   ```
 ### Populating Customer, TheOrder and OrderRecord tables
-* Use one for loop to iterate through all four customer data files
-* Before insertion into the tables, query TheOrder and Customer tables respectively to get the value of IDENTITY field (order id for TheOrder table, customer id for Customer table). For example, for Customer table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM Customer":
+* Use one for loop to iterate through all five customer data files
+
+* Before insertion into the tables, query TheOrder and Customer tables respectively to get the value of identity column (order id for TheOrder table, customer id for Customer table). For example, for TheOrder table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder":
   ```bash
-  int customerId = 0;
-  findId = "SELECT IDENTITY_VAL_LOCAL() FROM Customer";
+  int orderId = 0;
+  String findId = "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder";
   rs = stmt.executeQuery(findId);
-  if (rs.next()) { 
+  if (rs.next()) {
+     # if TheOrder table is not empty, retrieve the last orderId, increment it by 1 to get the new order id
      Integer result = rs.getInt(1);
-     # if Customer table is not empty, increment customerId 
-     customerId = result+1;
-     System.out.println("new CustomerId: " + customerId);
-  } else { 
-     # if Customer table is empty, set customerId to 1
-     customerId = 1;
-     System.out.println("No values in the table Customer. new CustomerId: " + customerId);
+     orderId = result + 1;
+     System.out.println("new OrderId: " + orderId);
+  } else {
+     # if TheOrder table is empty, set orderId to 1
+     orderId = 1;
+     System.out.println("No values in the table TheOrder. new OrderId: " + orderId);
   }
   rs.close();
   ```
-* Reset the auto-increment field value in TheOrder table, in case insertion into the table fails and is rolled back due to a constraint violation
+  
+* Reset the identity column value in TheOrder table, in case insertion into the OrderRecord table fails due to a constraint violation, causing all the changes since starting the order transaction to be rolled back. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+  ```bash
+  try {
+     String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
+     stmt.executeUpdate(restart);
+     System.out.println("Reset TheOrder identity column");
+  } catch (SQLException e) {
+     System.err.println(e.getMessage());
+  }
+  ```
 *
 
 * Inside the for loop, use one while loop to read all the lines in each customer data file
@@ -255,9 +255,31 @@ Sample Output
 
 ## Philosophy
 
+ numeric gensym design
+ Auto-increment Handling
 
+Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+
+OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
 More info: 
+### Auto-increment Handling
 
+Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+
+OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+```bash
+try {
+   int value = 1;
+   String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
+			stmt.executeUpdate(restart);
+			System.out.println("Reset TheOrder id column");
+} catch (SQLException e) {
+			e.printStackTrace();
+}
+```
+The same logic is also executed in Customer table.
+
+Before any values are added to the database, reset the auto-increment field values in Customer and TheOrder tables for check purpose.
 
 More info: 
 possible Alternatives
