@@ -90,6 +90,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | inventoryPrice | DECIMAL(18,2)     | 
 
 **UML image**
+(./Diagrams.jpg)
 
 ## Deliverables
 
