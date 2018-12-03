@@ -6,7 +6,7 @@
 * [Technology](#technology)
 * [Schema](#schema)
 * [Deliverables](#deliverables)
-* [Build OrderManager](#build-ordermanager)
+* [Build](#build)
 * [Tests](#tests)
 * [Design](#design)
 
@@ -31,7 +31,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 * SQL
 
 ## Schema
-**Tables**
+### Tables
 
 | Tables        | Classification           | 
 |:-------------:|:-------------:|
@@ -42,7 +42,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | OrderRecord | relation     |   
 
 
-- Product table
+- table Product 
  
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
@@ -51,7 +51,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | SKU | CHAR(12)      |  
 
 
-- InventoryRecord table
+- table InventoryRecord 
 
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
@@ -59,7 +59,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | price      | DECIMAL(18,2)    | 
 | productSKU | CHAR(12)      | 
 
-- Customer table
+- table Customer 
 
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
@@ -69,9 +69,9 @@ Detailed project [specification](./ProjectDescription.pdf)
 | city       | VARCHAR(16) | 
 | state      | VARCHAR(16)   | 
 | country | VARCHAR(16)      |
-| zipCode | INT    | 
+| postalCode | INT    | 
 
-- TheOrder table
+- table TheOrder 
 
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
@@ -80,7 +80,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | orderDate | DATE      | 
 | shipmentDate | DATE     | 
 
-- OrderRecord table
+- table OrderRecord 
 
 | Column Name  | Data Type   | 
 |:-------------:|:-------------:|
@@ -89,7 +89,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | number | INT      | 
 | inventoryPrice | DECIMAL(18,2)     | 
 
-**UML image**  
+### UML image
 ![diagram](./Diagrams.jpg)
 
 ## Deliverables
@@ -98,17 +98,17 @@ Detailed project [specification](./ProjectDescription.pdf)
 
 - **OrderManager.java** - This program creates a manager database for the ER data model for OrderManager. There are entity tables for Product, Customer, TheOrder, and InventoryRecord, and relationship table for OrderRecord relation in the ER model.
 
-- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation table for OrderRecord relation. The sample data is stored in six tab-separated data files. 
+- **TestOrderManager.java** - This program tests the version of the manager database tables for OrderManager that uses relation table for OrderRecord relation. The sample data is stored in eight tab-separated data files. 
 
 - **Helper.java** - This file contains stored functions for parsing, validating, and converting OrderManager types to strings.
 
 - **Util.java** - This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
   
 ### Data Sets  
-File is organized into following columns: Product name, description, SKU, Quantity in stock, and price  
+Product file is organized into the following columns: product name, description, SKU, quantity in stock, and price.  
 - **products.txt** - This file contains products data for testing purpose.  
   
-All customer files are organized into following columns: Product SKU, Price, Quantity customer wants to buy, Customer name, address, state, country and postal code, order date and shipment date  
+All customer files are organized into the following columns: product SKU, price, quantity customer wants to buy, customer name, address, state, country and postal code, order date and shipment date.  
 - **customer1.txt** - This file contains data of customer Azamat Sarkytbayev's first order with a single kind of item.
 
 - **customer2.txt** - This file contains data of customer Philip Gust's order with two kinds of items.
@@ -119,7 +119,7 @@ All customer files are organized into following columns: Product SKU, Price, Qua
 
 - **customer5.txt** - This file contains data of customer P.K. Agarwal's order with a single kind of item, where the shipment date is earlier than order date.
 
-- **customer6.txt** - This file is identical to **products.txt**
+- **customer6.txt** - This file is identical to **customer1.txt**
 
 - **customer7.txt** - This file contains data of customer Emily Smith's order with a single kind of item.
 
@@ -128,7 +128,7 @@ All customer files are organized into following columns: Product SKU, Price, Qua
 - **ProjectDescription.pdf** - This file is the project specification.
 
 
-## Build OrderManager 
+## Build  
 
 ### Setup
 
@@ -252,7 +252,7 @@ try {
      System.err.println(e.getMessage());
   }
   ```
-  The necessity of this operation lies in identity column attribute. See [Auto-increment Handling](#auto-increment-handling) for more info. 
+  The necessity of this operation lies in identity column attribute. See [Gensym strategy](#gensym-strategy) for more info. 
   
 * Create a save point before adding values in each customer data file to the database
 * Inside the for loop, use one while loop to read all the lines in each customer data file
@@ -269,9 +269,9 @@ try {
 	 if (rs.next()) {
 		Integer result = rs.getInt(1);
 		if (result == 1) {
-		    // no need to insert the order once again
+		    # no need to insert the order once again
 		} else {
-		    // add a single TheOrder entry for a given customer's order
+		    # add a single TheOrder entry for a given customer's order
 		    insertRow_TheOrder.setInt(1, customerId);
 		    insertRow_TheOrder.setDate(2, orderDate);
 		    insertRow_TheOrder.setDate(3, shipmentDate);
@@ -337,30 +337,57 @@ try {
   
 ## Design 
 
-### numeric gensym design
- Auto-increment Handling
+### Gensym strategy
 
-Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+Both Customer and TheOrder tables have id fields as numeric gensym. A gensym is a generated symbol or id that can be associated with a record used as a key in association with other records in a database. 
 
-OrderManager solves the issue by resetting the auto-increment column value. For example, for TheOrder table, id is the auto-increment field with value orderId failing to be rolled back. Use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
-More info: 
-
+OrderManager takes advantage of identity column attribute. To create an identity column, include the GENERATED BY DEFAULT AS IDENTITY clause in CREATE TABLE statement. 
+* Use cases
 
 ```bash
-try {
-   int value = 1;
-   String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
-			stmt.executeUpdate(restart);
-			System.out.println("Reset TheOrder id column");
-} catch (SQLException e) {
-			e.printStackTrace();
-}
+SELECT IDENTITY_VAL_LOCAL() FROM table_name
 ```
-The same logic is also executed in Customer table.
+Use the SQL query to fetch the last inserted value of identity column.
+```bash
+ALTER TABLE table_name ALTER COLUMN column_name RESTART WITH value
+```
+The START WITH numeric-constant clause specifies the starting value for the identity column which can be positive or negative. Before dealing with any data files, set the identity column values in Customer and TheOrder tables to 1 to ensure the tests are restarted:
+  ```bash
+  try {
+	 int value = 1;
+	 String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + value;
+	 stmt.executeUpdate(restart);
+	 System.out.println("Reset TheOrder identity column");
+  } catch (SQLException e) {
+	 System.err.println(e.getMessage());
+  }
+  ```
+* Handling
 
-Before any values are added to the database, reset the auto-increment field values in Customer and TheOrder tables for check purpose.
+Conceptually, the identity column provides an easy way to automatically generate a unique value for every row in a table. This inherent feature introduces difficulty when used with rollback operation. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
+
+OrderManager solves the issue by suppressing the feature. Instead of letting the database generate unique values during insert operations, a value is specified for the identity column, and database will use it in the insert operation. 
+
+For example, when populating Customer, TheOrder and OrderRecord tables, before any values are added to the database, use the newly-calculated id to set the identity column values in Customer and TheOrder tables. 
+
+* Alternatives
+
+Identity column works smoothly in OrderManager, and there are other popular strategies for creating a gensym. 
+limitations, and notes on future next steps if you had more time
+
+
+
+
+
+
+
+
+
+
+
+
 
 More info: 
-possible Alternatives
+
 ### Data preprocessing
 The raw data -> The tidy data set
