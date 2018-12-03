@@ -33,10 +33,10 @@ Detailed project [specification](./ProjectDescription.pdf)
 ## Schema
 ### Tables
 
-![diagram1](./Slide2.jpg)
+![diagram1](./Slide2.JPG)
 
 ### UML image
-![diagram2](./Slide1.jpg)
+![diagram2](./Slide1.JPG)
 
 ## Deliverables
 
