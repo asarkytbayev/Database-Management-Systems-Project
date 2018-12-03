@@ -6,10 +6,10 @@
 * [Technology](#technology)
 * [Schema](#schema)
 * [Deliverables](#deliverables)
-* [Build](#build)
+* [Build OrderManager](#build-ordermanager)
 * [Tests](#tests)
-* [Philosophy](#philosophy)
-* [Todo](#todo)
+* [Design](#design)
+
 
 
 
@@ -18,13 +18,13 @@ OrderManager is an e-commerce program that enables a business to manage informat
 
 The RDBMS maintains information about products that can be ordered by costumers, tracks inventory levels of each product, and handles orders for product by customers. 
 
-Detailed project [specification](./ProjectDescription.pdf)
+Detailed project [specification](./ProjectDescription.pdf)!
 
 ## Team 
 * asarkytbayev - Azamat Sarkytbayev &lt;sarkytbayev.a@husky.neu.edu&gt;
-[github profile](https://github.com/asarkytbayev)
+[github profile](https://github.com/asarkytbayev)!
 * yitonghu - Yitong Hu &lt;hu.yit@husky.neu.edu&gt;
-[github profile](https://github.com/lightlyh)
+[github profile](https://github.com/lightlyh)!
 
 ## Technology
 * JavaDB
@@ -69,7 +69,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | city       | VARCHAR(16) | 
 | state      | VARCHAR(16)   | 
 | country | VARCHAR(16)      |
-| postalCode | VARCHAR(8)    | 
+| zipCode | INT    | 
 
 - TheOrder table
 
@@ -90,7 +90,6 @@ Detailed project [specification](./ProjectDescription.pdf)
 | inventoryPrice | DECIMAL(18,2)     | 
 
 **UML image**
-![diagram](./Diagrams.jpg)
 
 ## Deliverables
 
@@ -128,7 +127,7 @@ All customer files are organized into following columns: Product SKU, Price, Qua
 - **ProjectDescription.pdf** - This file is the project specification.
 
 
-## Build 
+## Build OrderManager 
 
 ### Setup
 
@@ -192,6 +191,7 @@ try {
 ```
 
 ### Populating Product and InventoryRecord tables
+
 * Use one while loop to read all the lines in products.txt
 * Insert data table by table
 * Commit insertions
@@ -216,6 +216,7 @@ try {
   YW-968406-5T    	 100	       399.99
   ```
 ### Populating Customer, TheOrder and OrderRecord tables
+
 * Use one for loop to iterate through all five customer data files
 * Before insertion into the tables, query TheOrder and Customer tables respectively to get the last inserted value of identity column (order id for TheOrder table, customer id for Customer table). For example, for TheOrder table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder":
   ```bash
@@ -251,6 +252,7 @@ try {
   }
   ```
   The necessity of this operation lies in identity column attribute. See [Auto-increment Handling](#auto-increment-handling) for more info. 
+  
 * Create a save point before adding values in each customer data file to the database
 * Inside the for loop, use one while loop to read all the lines in each customer data file
 * Insert data table by table
@@ -285,7 +287,7 @@ try {
   There are two scenarios where rollback happens. When populating TheOrder table, if somehow shipment date is earlier than order date, the database will throw an exception, the error message indicates:
   ```bash
   The check constraint 'CHK_DATES' was violated while performing an INSERT or UPDATE on table '"USER1"."THEORDER"'.
-  INSERT on table 'ORDERRECORD' caused a violation of foreign key constraint 'FK_ORDER_ID' for key (4).  The statement has been rolled     back.
+  INSERT on table 'ORDERRECORD' caused a violation of foreign key constraint 'FK_ORDER_ID' for key (4).  The statement has been rolled back.
   ```
   Note the rollback does not affect Customer table.  
   
@@ -295,6 +297,7 @@ try {
   ```
 * Commit insertions
 * Print InventoryRecord, Customer, TheOrder and OrderRecord tables
+
   Sample Output:
   
   ```bash
@@ -331,10 +334,10 @@ try {
   3               	15              	3.24            	EE-345987-30     
   ```
   
-## Philosophy
+## Design 
 
- numeric gensym design
-### Auto-increment Handling
+### numeric gensym design
+ Auto-increment Handling
 
 Customer table and TheOrder table both use an IDENTITY field as a gensym. According to the [MySQL Documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-auto-increment-handling.html) (the same rule also applies to all database products), it is expected that if a transaction that generated auto-increment values rolls back, those auto-increment values are not reused, thus leaving gaps in the values stored in an auto-increment column of a table.
 
@@ -358,4 +361,5 @@ Before any values are added to the database, reset the auto-increment field valu
 
 More info: 
 possible Alternatives
+### Data preprocessing
 The raw data -> The tidy data set
