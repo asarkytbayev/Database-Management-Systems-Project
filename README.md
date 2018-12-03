@@ -69,7 +69,7 @@ Detailed project [specification](./ProjectDescription.pdf)
 | city       | VARCHAR(16) | 
 | state      | VARCHAR(16)   | 
 | country | VARCHAR(16)      |
-| zipCode | INT    | 
+| postalCode | VARCHAR(8)    | 
 
 - TheOrder table
 
