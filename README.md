@@ -105,8 +105,10 @@ Detailed project [specification](./ProjectDescription.pdf)
 - **Util.java** - This file contains functions for printing Product, InventoryRecord, TheOrder, and OrderRecord in the database. 
   
 ### Data Sets
-- **products.txt** - This file contains products data for testing purpose.
+- **products.txt** - This file contains products data for testing purpose.  
+File is organized into following columns: Product name, description, SKU, Quantity in stock, and price
   
+All customer files are organized into following columns: Product SKU, Price, Quantity customer wants to buy, Customer name, address, state, country and postal code, order date and shipment date  
 - **customer1.txt** - This file contains data of customer Azamat Sarkytbayev's first order with a single kind of item.
 
 - **customer2.txt** - This file contains data of customer Philip Gust's order with two kinds of items.
@@ -116,6 +118,10 @@ Detailed project [specification](./ProjectDescription.pdf)
 - **customer4.txt** - This file contains data of customer Azamat Sarkytbayev's second order with a single kind of item, whose number happens to surpass the corresponding inventory.
 
 - **customer5.txt** - This file contains data of customer P.K. Agarwal's order with a single kind of item, where the shipment date is earlier than order date.
+
+- **customer6.txt** - This file is identical to **products.txt**
+
+- **customer7.txt** - This file contains data of customer Emily Smith's order with a single kind of item.
 
 ### Doc
 
