@@ -167,7 +167,7 @@ The database has one stored function for the purpose of validating product sku t
 
 The database has three tables containing CHECK constraint. Product table has a CHECK with SKU column using the isSKU stored function, InventoryRecord table has CHECK with both price column and number column, and TheOrder table has CHECK with both orderDate column and shipmentDate column.
 
-If the value being added to an attribute of a tuple violates the CHECK constraint, the check constraint evaluates to false. The corresponding database update is aborted, and a SQLException is thrown.
+If the value being added to an attribute of a tuple violates the CHECK constraint, the CHECK constraint evaluates to false. The corresponding database update is aborted, and a SQLException is thrown.
 
 ```bash
 try {
@@ -231,7 +231,7 @@ try {
   }
   rs.close();
   ```
-* Set the identity column value in TheOrder table. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
+* Set the identity column value in Customer and TheOrder tables. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
   ```bash
   try {
      String restart = "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH " + orderId;
@@ -248,22 +248,80 @@ try {
 
   Query tables first to avoid duplicate insertion and retrieve corresponding identity column values. For example, for TheOrder table, use the SQL syntax "ALTER TABLE TheOrder ALTER COLUMN id RESTART WITH ":
   ```bash
-  
+  try {
+     # use SQL query SELECT COUNT(*) FROM TheOrder WHERE id = ? AND customerId = ?
+	 queryRow_TheOrder.setInt(1, orderId);
+	 queryRow_TheOrder.setInt(2, customerId);
+	 queryRow_TheOrder.execute();
+	 rs = queryRow_TheOrder.getResultSet();
+	 if (rs.next()) {
+		Integer result = rs.getInt(1);
+		if (result == 1) {
+		    // no need to insert the order once again
+		} else {
+		    // add a single TheOrder entry for a given customer's order
+		    insertRow_TheOrder.setInt(1, customerId);
+		    insertRow_TheOrder.setDate(2, orderDate);
+		    insertRow_TheOrder.setDate(3, shipmentDate);
+		    insertRow_TheOrder.execute();
+		}
+	 }
+	 rs.close();
+  } catch (SQLException e) {
+	 isRolledBack = true;
+	 System.err.println(e.getMessage());
+  }
   ```
   
-  in case insertion into the OrderRecord table fails due to a constraint violation, causing all the changes since starting the order transaction to be rolled back. 
+  There are two scenarios where rollback happens. When populating TheOrder table, if somehow shipment date is earlier than order date, the database will throw an exception, the error message indicates:
+  ```bash
+  The check constraint 'CHK_DATES' was violated while performing an INSERT or UPDATE on table '"USER1"."THEORDER"'.
+  INSERT on table 'ORDERRECORD' caused a violation of foreign key constraint 'FK_ORDER_ID' for key (4).  The statement has been rolled     back.
+  ```
+  Note the rollback does not affect Customer table.  
+  
+  Likewise, during the process of inserting into OrderRecord table, if the number of units of a product that customer wants to buy surpasses the current inventory, the CHECK constraint on InventoryRecord table is violated, causing all the changes since starting the order transaction to be rolled back to the saved point. Execution continues with the next customer's order. The error message indicates:
+  ```bash
+  Insufficient stock! Customer Azamat Sarkytbayev attempted to buy more items than in stock. Rolling back
+  ```
 * Commit insertions
-* Print Product and InventoryRecord tables
-Sample Output
+* Print InventoryRecord, Customer, TheOrder and OrderRecord tables
+  Sample Output:
+  
+  ```bash
+  Updated Inventory Record:
 
+  InventoryRecord:
+  SKU             	Number          	Price           
+  AB-123456-0N    	80              	15.56           
+  DC-835790-AB    	90              	30.00           
+  EE-345987-30    	85              	3.24            
+  OU-436713-X2    	100             	5.78            
+  YW-968406-5T    	75              	399.99          
 
+  Customers:
+  ID  	Name            	Address                         	City        	State	Country 	Postal Code
+  1   	Azamat Sarkytbayev	6024 Silver Creek Valley Rd     	San Jose    	CA  	USA     	95116   
+  2   	Philip Gust     	360 Huntington Ave              	Boston      	MA  	USA     	02115   
+  3   	Yitong Hu       	101 N. Tryon Street             	Charlotte   	NC  	USA     	28246   
+  4   	P.K. Agarwal    	401 Terry Ave N                 	Seattle     	WA  	USA     	98109     
 
+  TheOrder:
+  ID  	Customer ID     	Order Date      	Shipment Date   
+  1   	1               	2018-11-28      	2018-11-29      
+  2   	2               	2018-11-29      	2018-11-30      
+  3   	3               	2018-11-30      	2018-12-01            
 
-
-```bash
-
-```
-
+  OrderRecord:
+  Order ID        	Number          	Price           	SKU             
+  1               	5               	15.56           	AB-123456-0N    
+  2               	10              	399.99          	YW-968406-5T    
+  2               	10              	30.00           	DC-835790-AB    
+  3               	15              	399.99          	YW-968406-5T    
+  3               	15              	15.56           	AB-123456-0N    
+  3               	15              	3.24            	EE-345987-30     
+  ```
+  
 ## Philosophy
 
  numeric gensym design
