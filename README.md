@@ -164,7 +164,7 @@ try {
   ```
 ### Populating Customer, TheOrder and OrderRecord tables
 
-* Use one for loop to iterate through all five customer data files
+* Use one for loop to iterate through all seven customer data files
 * Before insertion into the tables, query TheOrder and Customer tables respectively to get the last inserted value of identity column (order id for TheOrder table, customer id for Customer table). For example, for TheOrder table, use the SQL syntax "SELECT IDENTITY_VAL_LOCAL() FROM TheOrder":
   ```bash
   int orderId = 0;
@@ -336,3 +336,6 @@ The project organizes test data into two categories: product file and customer f
 
 To ease the concerns above, some data preprocessing can be made. To get a tidy data set, consider rescheduling data according to the form of corresponding tables. For example, retrieving customer infomation needed for populating Customer table such as name, address, city, state, country and postal code and put it into a separate data file, the same manipulation shall work with order data, etc. 
 
+### Application
+
+This database can serve as a backend for a retail web-app. It would require a web-server business logic that would produce the products and customers files in the necessary format for the database to manage.
