@@ -33,64 +33,10 @@ Detailed project [specification](./ProjectDescription.pdf)
 ## Schema
 ### Tables
 
-| Tables        | Classification           | 
-|:-------------:|:-------------:|
-| Product       | entity | 
-| InventoryRecord      | entity      | 
-| Customer | entity      |  
-| TheOrder | entity     |    
-| OrderRecord | relation     |   
-
-
-- table Product 
- 
-| Column Name  | Data Type   | 
-|:-------------:|:-------------:|
-| name       | VARCHAR(32) | 
-| description      | VARCHAR(64)      | 
-| SKU | CHAR(12)      |  
-
-
-- table InventoryRecord 
-
-| Column Name  | Data Type   | 
-|:-------------:|:-------------:|
-| number       | INT | 
-| price      | DECIMAL(18,2)    | 
-| productSKU | CHAR(12)      | 
-
-- table Customer 
-
-| Column Name  | Data Type   | 
-|:-------------:|:-------------:|
-| id       | INT | 
-| name      | VARCHAR(20)    | 
-| address | VARCHAR(64)     | 
-| city       | VARCHAR(16) | 
-| state      | VARCHAR(16)   | 
-| country | VARCHAR(16)      |
-| postalCode | INT    | 
-
-- table TheOrder 
-
-| Column Name  | Data Type   | 
-|:-------------:|:-------------:|
-| id       | INT | 
-| customerId      | INT   | 
-| orderDate | DATE      | 
-| shipmentDate | DATE     | 
-
-- table OrderRecord 
-
-| Column Name  | Data Type   | 
-|:-------------:|:-------------:|
-| orderId       | INT | 
-| productSKU      | CHAR(12)   | 
-| number | INT      | 
-| inventoryPrice | DECIMAL(18,2)     | 
+![diagram1](./Slide2.jpg)
 
 ### UML image
-![diagram](./Diagrams.jpg)
+![diagram2](./Slide1.jpg)
 
 ## Deliverables
 
