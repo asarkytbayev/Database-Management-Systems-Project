@@ -55,6 +55,8 @@ public class TestOrderManager {
 		String customerFourFile = "customer4.txt";
 		// customer with a shipment date earlier than order date - will fail
 		String customerFiveFile = "customer5.txt";
+		String customerSixFile = "customer6.txt";
+		String customerSevenFile = "customer7.txt";
 		
 
 		Properties props = new Properties(); // connection properties
@@ -73,8 +75,10 @@ public class TestOrderManager {
 			BufferedReader br3 = new BufferedReader(new FileReader(new File(customerThreeFile)));
 			BufferedReader br4 = new BufferedReader(new FileReader(new File(customerFourFile)));
     		BufferedReader br5 = new BufferedReader(new FileReader(new File(customerFiveFile)));
-
-			// connects to db
+    		BufferedReader br6 = new BufferedReader(new FileReader(new File(customerSixFile)));
+    		BufferedReader br7 = new BufferedReader(new FileReader(new File(customerSevenFile)));
+			
+        	// connects to db
 			Connection conn = DriverManager.getConnection(connStr, props);
 			Statement stmt = conn.createStatement();
         		
@@ -202,7 +206,7 @@ public class TestOrderManager {
 			System.out.println();
 			
 			// files to read
-			BufferedReader[] brs = new BufferedReader[] { br1, br2, br3, br4, br5 };
+			BufferedReader[] brs = new BufferedReader[] { br1, br2, br3, br4, br5, br6, br7 };
 			
 			boolean isRolledBack = false;
 			for (BufferedReader br : brs) {
