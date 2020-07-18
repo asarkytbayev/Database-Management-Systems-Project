@@ -1,4 +1,5 @@
-# OrderManager: A Database for Managing Products and Orders
+# OrderManager: A Database for Managing Products and Orders  
+Class: [CS 5200. Database Management Systems.](http://catalog.northeastern.edu/search/?P=CS%205200)
 
 ## Table of Contents
 * [Overview](#overview)
